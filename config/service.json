@@ -1,0 +1,31 @@
+{
+	"data": [
+		{
+			"name": "Deezer",
+			"keywords": [
+				"dzr",
+				"deezer"
+			]
+		},
+		{
+			"name": "Dropbox",
+			"keywords": [
+				"dbx",
+				"dropbox"
+			]
+		},
+		{
+			"name": "SoundCloud",
+			"keywords": [
+				"sc",
+				"soundcloud"
+			]
+		},
+		{
+			"name": "Spotify",
+			"keywords": [
+				"spotify"
+			]
+		}
+	]
+}

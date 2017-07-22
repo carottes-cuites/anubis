@@ -1,0 +1,28 @@
+{
+	"data": [{
+		"name": "association name here",
+		"pattern": [
+			"add one",
+			"or several patterns here"
+		],
+		"function": "FUNCTION_NAME"
+	}, {
+		"name": "Play radio",
+		"pattern": [
+			"radio",
+			"mix"
+		],
+		"function": "PLAY_RADIO"
+
+	}, {
+		"name": "Play artist",
+		"pattern": [
+			"artist"
+		],
+		"function": "PLAY_ARTIST"
+	}, {
+		"name": "Fallback",
+		"pattern": [],
+		"function": "FALLBACK"
+	}]
+}
