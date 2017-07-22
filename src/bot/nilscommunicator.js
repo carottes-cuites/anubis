@@ -1,3 +1,5 @@
+const Tool = require("../misc/tool.js");
+
 module.exports = class NilsCommunicator {
 	constructor(nils) {
 		this.nils = nils;
@@ -9,7 +11,11 @@ module.exports = class NilsCommunicator {
 	}
 
 	sendMessage(content, destination) {
-		//send 'content' message to 'destination'.
+		destination.send(this.formatMessage(content))
+			.then(elem => {
+				Tool.debugBot("Nils", 'Reply sent "' + elem.content +'".');
+			})
+			.catch(console.error);
 	}
 
 	formatMessage(content) {

@@ -66,7 +66,7 @@ module.exports = class Nils {
 
 	messageReceived(message) {
 		var msg = message.content;
-		console.log(msg);
+		Tool.debugBot("Nils", 'Message received "' + msg +'".');
 		
 		/**
 		* Define an adapter which will return the method to use,
@@ -75,6 +75,10 @@ module.exports = class Nils {
 		var translated = this.parser.translate(msg);
 		translated.method(translated.parameters);
 
+		this.communicator.sendMessage(
+			"Message received",
+			message.channel
+		)
 		this.responseTo(message, "Message received");
 	}
 

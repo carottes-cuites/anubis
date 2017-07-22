@@ -43,8 +43,7 @@ module.exports = class StreamerDropbox extends Streamer {
 
 	streamFile(name, playFile) {
 		playFile = true;
-		console.log("jgbgib");
-		console.log(name)
+		Tool.debug("Play file " + name);
 		//Check cache first.
 		// If not fetch it and locallyze it.
 		this.files.forEach(file => {
@@ -58,14 +57,14 @@ module.exports = class StreamerDropbox extends Streamer {
 	}
 
 	setDataInFile(data) {
-		console.log("download file");
+		Tool.debug("Download file " + data.name);
 		fs.writeFile(
 			'./cache/audio/' + data.name,
 			data.fileBinary,
 			'binary',
 			err => {
 				if (err) { throw err; }
-				console.log('File: ' + data.name + ' saved.');
+				Tool.debug('File "' + data.name + '" saved.');
 				this.streamAudio('./cache/audio/' + data.name);
 			}
 		);

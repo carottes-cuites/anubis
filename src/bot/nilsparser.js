@@ -1,6 +1,6 @@
 const Tool = require("../misc/tool.js");
-const Pattern = require("../../config/pattern.json");
-const Methods = require("../../config/method.json");
+const Pattern = require("../../resources/data/config/pattern.json");
+const Methods = require("../../resources/data/config/method.json");
 
 module.exports = class NilsParser {
 
@@ -42,7 +42,7 @@ module.exports = class NilsParser {
 
 
 	failMethodMatch() {
-		console.log("Failed to match a pattern to a method. "
+		Tool.debug("Failed to match a pattern to a method. "
 		+ "Please check the 'pattern.json' file or update the NilsStream class");
 	}
 
