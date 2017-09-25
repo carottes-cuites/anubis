@@ -10,5 +10,6 @@ module.exports = class Configuration {
 		this.discord = config.discord;
 		this.dropbox = config.dropbox;
 		this.nils = config.nils;
+		this.twitch = config.twitch;
 	}
 }

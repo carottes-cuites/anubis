@@ -24,6 +24,16 @@
 				}
 			}
 		},
+		"twitch": {
+			"name": "Twitch",
+			"keywords": ["twitch", "tw"],
+			"cmds": {
+				"stream": {
+					"method": "STREAM",
+					"pattern": ["default"]
+				}
+			}
+		},
 		"dropbox" : {
 			"name": "Dropbox",
 			"keywords": [

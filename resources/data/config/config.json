@@ -30,5 +30,8 @@
 	},
 	"spotify": {
 		"token": "BQDFt56invZ0igcTKo9HeTG0pqm43i5xh4ufWezrCXpzBKXyb0NqD5ADO0R-IlZ1CNFosMHJ7axNu837bc0-AYoVapn_mMIpfp9tlNvu8ce8shibrhER7BSe8ZEWxHhItHLokgmkrA"
+	},
+	"twitch": {
+		"client": "54spadh41at1u05dv5ypq6aex98csn"
 	}
 }

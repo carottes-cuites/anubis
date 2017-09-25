@@ -18,11 +18,13 @@
     "dropbox": "^2.5.4",
     "express": "^4.15.3",
     "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
     "node-opus": "^0.2.6",
     "opusscript": "0.0.3",
     "request": "^2.81.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "twitch-get-stream": "^0.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

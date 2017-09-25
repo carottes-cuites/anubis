@@ -32,6 +32,4 @@ module.exports = class FetcherDZR extends Fetcher {
             player.play();
         });
     }
-
-
 }

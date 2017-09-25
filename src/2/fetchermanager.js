@@ -3,6 +3,7 @@ var FetcherDBX = require("./fetcherdbx.js");
 var FetcherDZR = require("./fetcherdzr.js");
 var FetcherSC = require("./fetchersc.js");
 var FetcherST = require("./fetcherst.js");
+var FetcherTW = require("./fetchertw.js");
 
 module.exports = class FetcherManager extends Essential {
     constructor(anubis) {
@@ -19,6 +20,7 @@ module.exports = class FetcherManager extends Essential {
         this.add('dropbox', new FetcherDBX(this.anubis));
         this.add('soundcloud', new FetcherSC(this.anubis));
         this.add('spotify', new FetcherST(this.anubis));
+        this.add('twitch', new FetcherTW(this.anubis));
         for( var service  in this.services) {
             this.services[service].prepare();
         }

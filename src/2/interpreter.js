@@ -22,7 +22,7 @@ module.exports = class Interpreter extends Essential {
             if (data.name == undefined) {
                 serv.keywords.forEach(
                     (keyword) => {
-                        if (data.name == undefined && content.indexOf(keyword) != -1) {
+                        if (data.name == undefined && content.indexOf(keyword + " ") != -1) {
                             data.name = serv.name;
                             data.keyword = keyword;
                         }
@@ -41,16 +41,16 @@ module.exports = class Interpreter extends Essential {
         var def;
         for (var serv in DataService.data) {
             serv = DataService.data[serv];
-            if(serv.name.toLowerCase() != edata.service.name.toLowerCase()) break;
+            if(serv.name.toLowerCase() != edata.service.name.toLowerCase()) continue;
             for(var cmd in serv.cmds) {
-                if(data.method != undefined) break;
+                if(data.method != undefined) continue;
                 cmd = serv.cmds[cmd];
                 cmd.pattern.forEach(
                     (pattern) => {
                         if (pattern == "default") {
                             def = cmd;
                             return;
-                        } else if (content.indexOf(pattern) != -1) {
+                        } else if (content.indexOf(pattern + " ") != -1) {
                             data.method = cmd.method;
                             data.pattern = pattern;
                         } 
@@ -67,8 +67,8 @@ module.exports = class Interpreter extends Essential {
 
     extractRequest(data) {
         var content = data.request.split('> ')[1];
-        content = content.replace(data.command.pattern, '');
-        content = content.replace(data.service.keyword, '');
+        content = content.replace(data.service.keyword + ' ', '');
+        content = content.replace(data.command.pattern + ' ', '');
         return content;
     }
 
