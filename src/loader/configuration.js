@@ -1,4 +1,4 @@
-const config = require("../../resources/data/config/config.json")
+const config = require("../../resources/data/config/config.json");
 
 module.exports = class Configuration {
 

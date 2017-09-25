@@ -13,12 +13,10 @@ module.exports = class Nils {
 
 	init () {
 		Tool.debugBot("Nils", "Initiating...");
-		this.eventSets = false;
-		this.voiceChannel = {};
 		this.bot = new Discord.Client();
 		this.streamer = new NilsStreamer(this);
 		this.parser = new NilsParser(this.streamer);
-		this.communicator = new NilsCommunicator(this);
+		this.communicator = new NilsCommunicator(this.bot);
 	}
 
 	prepare() {
@@ -31,11 +29,6 @@ module.exports = class Nils {
 	}
 
 	connect () {
-		if (!this.eventSets) {
-			Tool.debugBot("Nils", "Events are not set.");
-			return;
-			// Handle this with a throw error.
-		}
 		Tool.debugBot("Nils", 'Start communication with "Discord" server...');
 		this.bot.login(this.config.discord.token);
 	}
@@ -45,23 +38,24 @@ module.exports = class Nils {
 			this.clientReady();
 		});
 		this.bot.on('message', (message) => {
-			if(!message.author.bot || message.content.startsWith(this.config.nils.trigger)) {
+			if (!message.author.bot && this.isNilsConcerned(message.content)) {
+									//&& message.content.startsWith(this.config.nils.trigger)) {
 				this.messageReceived(message);
 			}
 		});
-		this.eventSets = true;
+	}
+	
+	isNilsConcerned(message) {
+		return message.includes('@' + this.bot.user.username) || message.includes(this.bot.user.id);
 	}
 
 	clientReady() {
 		Tool.debugBot("Nils", 'Bot logged in and ready.');
-		this.voiceChannel = this.bot.channels.filter(chan => {
-	    	return chan.type == 'voice' && chan.name == this.config.discord.channel.voice.name;
-		}).first();
-		this.voiceChannel.join()
-			.then(connection => {
-				Tool.debugBot("Nils", 'Joined channel "' + this.voiceChannel.name + '".');
-			})
-			.catch(console.error);
+		var vc = this.bot.channels.filter(chan => {
+	    		return chan.type == 'voice' && chan.name == this.config.discord.channel.voice.name;
+			}).first();
+		this.communicator.connectVoiceChannel(vc);
+		Tool.debug("Bot id : "+this.bot.user.username);
 	}
 
 	messageReceived(message) {
@@ -73,26 +67,11 @@ module.exports = class Nils {
 		* according to the text patern catched inthe message.content.
 		*/
 		var translated = this.parser.translate(msg);
-		translated.method(translated.parameters);
+		translated.method(message, translated.parameters);
 
 		this.communicator.sendMessage(
 			"Message received",
 			message.channel
 		)
-		this.responseTo(message, "Message received");
-	}
-
-	responseTo(inputMessage, response, to) {
-		if (typeof to === 'undefined') to = '';
-		switch (to) {
-			case 'author':
-			default:
-				inputMessage.channel.send(response)
-					.then(() => {
-						Tool.debugBot("Nils", "Reply sent.");
-					})
-					.catch(console.error);
-			break;
-		}
 	}
 }

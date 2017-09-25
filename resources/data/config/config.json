@@ -27,5 +27,8 @@
 		"token": "EiyuJSUkd1wAAAAAAAADoCC-nOMf4QLHLhGdN-JxtGDtVC10C2wDWhi04d-VHnVH",
 		"secret": "",
 		"appid": ""
+	},
+	"spotify": {
+		"token": "BQDFt56invZ0igcTKo9HeTG0pqm43i5xh4ufWezrCXpzBKXyb0NqD5ADO0R-IlZ1CNFosMHJ7axNu837bc0-AYoVapn_mMIpfp9tlNvu8ce8shibrhER7BSe8ZEWxHhItHLokgmkrA"
 	}
 }

@@ -30,13 +30,26 @@ module.exports = class NilsParser {
 	*	Return the function associated with the 
 	*/
 	translate(message)  {
-		return this.streamer.getMethod("DROPBOX");
+		//force pattern : return this.streamer.getMethod("DROPBOX");
 		var pattern;
+		if(
+			message.indexOf('dbx') != -1 ||
+			message.indexOf('dropbox') != -1
+		) {
+			pattern = this.streamer.getMethod("DROPBOX");
+			console.log(pattern);
+		} else if(
+			message.indexOf('dzr') != -1
+			|| message.toLowerCase().indexOf('deezer') != -1
+		) {
+			pattern = this.streamer.getMethod("DEEZER");
+		} else {
+			pattern = this.streamer.getMethod("FALLBACK");
+		}
 		// Pattern is associated to a pattern...
 		// HERE lies the magic of algorithm..
-		var method = this.streamer.getMethod(pattern.method);
-		if (typeof method !== 'undefined') func = method;
-		else method = this.failMethod; 
+		var method = this.streamer.getMethod(pattern.id);
+		if (typeof method == undefined) method = this.failMethod; 
 		return method;
 	}
 

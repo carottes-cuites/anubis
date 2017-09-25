@@ -1,31 +1,48 @@
 {
-	"data": [
-		{
+	"data": {
+		"deezer" : {
 			"name": "Deezer",
 			"keywords": [
 				"dzr",
 				"deezer"
-			]
+			],
+			"params": [
+				"alt"
+			],
+			"cmds": {
+				"stream": {
+					"method": "STREAM",
+					"pattern": ["default"]
+				},
+				"artist": {
+					"method": "PLAY_ARTIST",
+					"pattern": ["artist"]
+				},
+				"radio": {
+					"method": "PLAY_RADIO",
+					"pattern": ["radio", "mix"]
+				}
+			}
 		},
-		{
+		"dropbox" : {
 			"name": "Dropbox",
 			"keywords": [
 				"dbx",
 				"dropbox"
 			]
 		},
-		{
+		"soundcloud": {
 			"name": "SoundCloud",
 			"keywords": [
 				"sc",
 				"soundcloud"
 			]
 		},
-		{
+		"spotify": {
 			"name": "Spotify",
 			"keywords": [
 				"spotify"
 			]
 		}
-	]
+	}
 }

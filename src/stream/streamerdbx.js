@@ -5,7 +5,6 @@ const Tool = require("../misc/tool.js");
 module.exports = class StreamerDropbox extends Streamer {
 	constructor(nils) {
 		super(nils);
-		this.init();
 	}
 
 	init() {
@@ -48,6 +47,17 @@ module.exports = class StreamerDropbox extends Streamer {
 		// If not fetch it and locallyze it.
 		this.files.forEach(file => {
 			if (file.name == name) {
+				console.log("dahd ahdahhdha "+ file.url);
+				this.dbx.filesGetTemporaryLink(
+					{path:'/' + name}//[JSON.stringify({path:file.url})]
+				).then(
+					(res) => {
+						console.log(res);
+						this.streamAudio(res.link);
+					}, (err) => {
+						console.log(err);
+				});
+				return;
 				this.dbx.sharingGetSharedLinkFile({url: file.url})
 					.then(data => {
 						this.setDataInFile(data);
