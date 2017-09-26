@@ -16,6 +16,7 @@ module.exports = class FetcherDZR extends Fetcher {
     }
 
     stream(that, data, message) {
+        data.request = data.request.replace(" ", "+");
         var options = that.formatRequest({
             q: data.request
         });

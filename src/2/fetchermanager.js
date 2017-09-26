@@ -1,9 +1,10 @@
-var Essential = require("./essential.js");
-var FetcherDBX = require("./fetcherdbx.js");
-var FetcherDZR = require("./fetcherdzr.js");
-var FetcherSC = require("./fetchersc.js");
-var FetcherST = require("./fetcherst.js");
-var FetcherTW = require("./fetchertw.js");
+const Essential = require("./essential.js");
+const FetcherDBX = require("./fetcherdbx.js");
+const FetcherDZR = require("./fetcherdzr.js");
+const FetcherSC = require("./fetchersc.js");
+const FetcherST = require("./fetcherst.js");
+const FetcherTW = require("./fetchertw.js");
+const Native = require("./native.js");
 
 module.exports = class FetcherManager extends Essential {
     constructor(anubis) {
@@ -21,6 +22,7 @@ module.exports = class FetcherManager extends Essential {
         this.add('soundcloud', new FetcherSC(this.anubis));
         this.add('spotify', new FetcherST(this.anubis));
         this.add('twitch', new FetcherTW(this.anubis));
+        this.add('native', new Native(this.anubis));
         for( var service  in this.services) {
             this.services[service].prepare();
         }

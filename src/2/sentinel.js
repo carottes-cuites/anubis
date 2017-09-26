@@ -26,34 +26,43 @@ module.exports = class Sentinel extends Essential {
     }
 
     onMessage(message) {
-        if (this.validate(message)) {
-            var data = {
-                request: message.content
-            };
-            console.log('Message received "' + message.content + '"');
-            data.serverID = this.anubis.interpreter.detectServer(message);
-            if (data.serverID == undefined) {
-                console.error("Server detection failed. Please proceed to a maintenance of the system.");
-                return;
-            }
-            data.service = this.anubis.interpreter.detectService(message);
-            if (data.service.obj == undefined) {
-                console.error("No service found");
+        if (!this.validate(message)) return;
+        var data = {
+            request: message.content
+        };
+        console.log('Message received "' + message.content + '"');
+        data.serverID = this.anubis.interpreter.detectServer(message);
+        if (data.serverID == undefined) {
+            console.error("Server detection failed. Please proceed to a maintenance of the system.");
+            return;
+        }
+        data.service = this.anubis.interpreter.detectService(message);
+        if (data.service.obj == undefined) {
+            var native = this.anubis.interpreter.detectNativeCommand(message);
+            if(native.command == undefined) {
+                console.error("No service nor native method found");
                 this.anubis.communicator.broadcast(
                     this.format(this.dumbMessage, [message.author])
                 );
                 return;
+            } else {
+                console.log("Native command found");
+                data.service = native.service;
+                data.command = native.command
+                data.request = this.anubis.interpreter.extractNativeCommand(data);
             }
+        } else {
             data.command = this.anubis.interpreter.extractCommand(data);
             if (data.command == undefined) {
                 console.error('Command "' + data.command.method + '" not found / registered for the service "' + service.name + '"');
                 this.anubis.communicator.broadcast(
                     this.format(this.dumbMessage, [message.author])
                 );
+                return;
             }
             data.request = this.anubis.interpreter.extractRequest(data);
-            data.service.obj.execute(data, message);
         }
+        data.service.obj.execute(data, message);
     }
 
     validate(message) {

@@ -1,5 +1,40 @@
 {
 	"data": {
+		"native" : {
+			"name": "Native",
+			"keywords": [],
+			"params": [],
+			"cmds": {
+				"play": {
+					"method": "PLAY",
+					"pattern": ["play", "resume"]
+				},
+				"pause": {
+					"method": "PAUSE",
+					"pattern": ["pause"]
+				},
+				"stop": {
+					"method": "STOP",
+					"pattern": ["stop"]
+				},
+				"next": {
+					"method": "NEXT",
+					"pattern": ["next"]
+				},
+				"previous": {
+					"method": "PREVIOUS",
+					"pattern": ["previous"]
+				},
+				"clean": {
+					"method": "CLEAN",
+					"pattern": ["clean"]
+				},
+				"reboot": {
+					"method": "REBOOT",
+					"pattern": ["reboot"]
+				}
+			}
+		},
 		"deezer" : {
 			"name": "Deezer",
 			"keywords": [

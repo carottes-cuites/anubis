@@ -25,13 +25,14 @@ module.exports = class Fetcher extends Essential{
         return this.commands[id];
     }
 
-    formatRequest(qs, headers) {
+    formatRequest(qs, headers, uri) {
         var options = {
             uri: this.uri,
             qs: {},
             headers: { 'User-Agent': 'Request-Promise' },
             json: true
         };
+        if (uri != undefined) options.uri = uri;
         if (qs != undefined) {
             for(var q in qs) {
                 options.qs[q] = qs[q];

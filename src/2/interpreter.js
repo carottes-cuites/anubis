@@ -25,12 +25,36 @@ module.exports = class Interpreter extends Essential {
                         if (data.name == undefined && content.indexOf(keyword + " ") != -1) {
                             data.name = serv.name;
                             data.keyword = keyword;
+                            data.obj = this.anubis.fetcherManager.service(data.name.toLowerCase());
                         }
                     }
                 );
             }
         }
-        data.obj = this.anubis.fetcherManager.service(data.name.toLowerCase());
+        return data;
+    }
+
+    detectNativeCommand(message) {
+        var content = this.dump(message) + ' ';
+        var data = {};
+        var native = DataService.data.native;
+        for (var cmd in native.cmds) {
+            if(data.method != undefined) break;
+            cmd = native.cmds[cmd];
+            cmd.pattern.forEach(pattern => {
+                if (content.indexOf(pattern + ' ') != -1) {
+                    data.command = {
+                        method: cmd.method,
+                        pattern: pattern
+                    };
+                    data.service = {
+                        name: native.name,
+                        keyword: '',
+                        obj: this.anubis.fetcherManager.service(native.name.toLowerCase())
+                    };
+                }
+            });
+        }
         return data;
     }
 
@@ -41,9 +65,9 @@ module.exports = class Interpreter extends Essential {
         var def;
         for (var serv in DataService.data) {
             serv = DataService.data[serv];
-            if(serv.name.toLowerCase() != edata.service.name.toLowerCase()) continue;
+            if(serv.name == 'Native' || serv.name.toLowerCase() != edata.service.name.toLowerCase()) continue;
             for(var cmd in serv.cmds) {
-                if(data.method != undefined) continue;
+                if(data.method != undefined) break;
                 cmd = serv.cmds[cmd];
                 cmd.pattern.forEach(
                     (pattern) => {
@@ -68,8 +92,12 @@ module.exports = class Interpreter extends Essential {
     extractRequest(data) {
         var content = data.request.split('> ')[1];
         content = content.replace(data.service.keyword + ' ', '');
-        content = content.replace(data.command.pattern + ' ', '');
+        if(data.command.pattern !== '') content = content.replace(data.command.pattern + ' ', '');
         return content;
+    }
+
+    extractNativeCommand(data) {
+        return data.request.split('> ')[1];
     }
 
     extractParams(content) {
