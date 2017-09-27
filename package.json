@@ -14,14 +14,15 @@
   "author": "jdarras",
   "license": "ISC",
   "dependencies": {
+    "bufferutil": "^3.0.2",
     "discord.js": "^11.1.0",
     "dropbox": "^2.5.4",
-    "express": "^4.15.3",
+    "erlpack": "github:hammerandchisel/erlpack",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
+    "libsodium-wrappers": "^0.5.4",
     "node-opus": "^0.2.6",
-    "opusscript": "0.0.3",
     "request": "^2.81.0",
     "request-promise": "^4.2.2",
     "twitch-get-stream": "^0.4.0"
