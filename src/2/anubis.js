@@ -44,8 +44,8 @@ module.exports = class Anubis {
     }
 
     connect() {
-		console.log('Trying to communicate with "Discord" server...');
-		this.bot.login(this.config.discord.token);
+        console.log('Trying to communicate with "Discord" server...');
+		this.bot.login(this.config.discord[process.env.NODE_ENV].token);
     }
 
     disconnect() {}

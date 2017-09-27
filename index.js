@@ -1,4 +1,6 @@
 "use strict";
+process.env.NODE_ENV = 'production';
+console.log('Environment : "' + process.env.NODE_ENV +'"');
 
 const Anubis =require("./src/2/anubis.js")
 const Configuration = require("./src/loader/configuration.js");

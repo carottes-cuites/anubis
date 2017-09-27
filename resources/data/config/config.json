@@ -9,18 +9,28 @@
 		}
 	},
 	"discord": {
-		"token": "MzI5NTg5ODI4ODM4NDkwMTEy.DDV7Yg.GcWJp4Vk9HUM5l7IVsSo26nQLOw",
-		"secret": "f6SIBI8AErJwbJdrIl4rtJ6tQxUl9J7K",
-		"appid": "329589828838490112",
+		"production": {
+			"token": "MzYyNTk0MzY0NTYxNTU1NDU2.DK08Gg.16nC-qZsUIpIzRtS49fVZEqRzac",
+			"secret": "dum9GMqa69rEVZCZDnTVMAajf0_ji6OJ",
+			"appid": "362594364561555456"
+		},
+		"dev": {
+			"token": "MzI5NTg5ODI4ODM4NDkwMTEy.DDV7Yg.GcWJp4Vk9HUM5l7IVsSo26nQLOw",
+			"secret": "f6SIBI8AErJwbJdrIl4rtJ6tQxUl9J7K",
+			"appid": "329589828838490112"
+		},
 		"channel": {
 			"voice": {
-				"name": "Music",
+				"name": "Bot",
 				"type": "voice"
 			},
 			"text": {
 				"name": "General",
 				"type": "text"
 			}
+		},
+		"ext": {
+			"integration_url": "https://discordapp.com/oauth2/authorize?client_id=362594364561555456&scope=bot&permissions=37215296"
 		}
 	},
 	"dropbox": {
