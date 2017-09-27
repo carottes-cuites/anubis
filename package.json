@@ -1,6 +1,6 @@
 {
   "name": "anubis-bot",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Anubis bot is an audio provider interface to get your favorite artists data, tracks, ... from any kind of services",
   "main": "index.js",
   "scripts": {

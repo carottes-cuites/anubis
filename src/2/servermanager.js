@@ -4,6 +4,7 @@ var Server = require("./server.js");
 module.exports = class ServerManager {
     constructor(anubis) {
         this.bot = anubis.bot;
+        this.chanConfig = anubis.config.discord.channel;
         this.communicator = anubis.communicator;
         this.init();
     }
@@ -13,7 +14,7 @@ module.exports = class ServerManager {
     }
 
     addServer(guild) {
-        this.servers[guild.id] = new Server(guild, this.bot, this.communicator);
+        this.servers[guild.id] = new Server(guild, this.bot, this.communicator, this.chanConfig);
         return this.servers[guild.id];
     }
 
