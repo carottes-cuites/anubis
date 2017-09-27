@@ -1,3 +1,5 @@
+"use strict";
+
 const Fetcher = require('./fetcher.js');
 
 module.exports = class Native extends Fetcher {

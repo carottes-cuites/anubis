@@ -1,3 +1,5 @@
+"use strict";
+
 var Fetcher = require('./fetcher.js');
 module.exports = class FetcherDZR extends Fetcher {
     constructor(anubis) {

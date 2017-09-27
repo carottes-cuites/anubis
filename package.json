@@ -1,7 +1,7 @@
 {
-  "name": "nils-bot",
-  "version": "0.0.1",
-  "description": "Nils bot use as a Musical provider interface to get your favorite artists data, tracks, events...",
+  "name": "anubis-bot",
+  "version": "0.0.2",
+  "description": "Anubis bot is an audio provider interface to get your favorite artists data, tracks, ... from any kind of services",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,7 +9,7 @@
   },
   "keywords": [
     "music",
-    "nils"
+    "anubis"
   ],
   "author": "jdarras",
   "license": "ISC",

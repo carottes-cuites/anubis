@@ -1,3 +1,5 @@
+"use strict";
+
 const Essential = require("./essential.js");
 const Request = require("request-promise");
 

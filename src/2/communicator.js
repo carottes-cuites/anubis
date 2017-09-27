@@ -1,3 +1,5 @@
+"use strict";
+
 var Essential = require("./essential.js");
 
 module.exports = class Communicator extends Essential {

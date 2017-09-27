@@ -1,3 +1,5 @@
+"use strict";
+
 var Essential = require("./essential.js");
 var DataService = require('./../../resources/data/config/service.json');
 module.exports = class Interpreter extends Essential {

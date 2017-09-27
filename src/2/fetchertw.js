@@ -1,3 +1,5 @@
+"use strict";
+
 var Fetcher = require('./fetcher.js');
 var Twitch = require('twitch-get-stream');
 module.exports = class FetcherTW extends Fetcher {

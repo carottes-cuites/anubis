@@ -1,3 +1,5 @@
+"use strict";
+
 const Essential = require("./essential.js");
 const FetcherDBX = require("./fetcherdbx.js");
 const FetcherDZR = require("./fetcherdzr.js");

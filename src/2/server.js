@@ -1,3 +1,5 @@
+"use strict";
+
 var Player = require("./player.js");
 
 module.exports = class Server {

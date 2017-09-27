@@ -1,3 +1,5 @@
+"use strict";
+
 var Essential = require("./essential.js");
 
 module.exports = class Sentinel extends Essential {

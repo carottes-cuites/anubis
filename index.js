@@ -1,7 +1,7 @@
-//const Nils = require("./src/bot/nils.js");
-var Anubis =require("./src/2/anubis.js")
+"use strict";
+
+const Anubis =require("./src/2/anubis.js")
 const Configuration = require("./src/loader/configuration.js");
-//const Tool = require("./src/misc/tool.js");
 
 class Main {
 

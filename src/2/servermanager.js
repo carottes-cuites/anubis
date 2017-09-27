@@ -1,3 +1,5 @@
+"use strict";
+
 var Server = require("./server.js");
 module.exports = class ServerManager {
     constructor(anubis) {
