@@ -1,7 +1,7 @@
-var Discord = require("discord.js");
-const Interpreter = require("./interpreter.js");
 "use strict";
 
+var Discord = require("discord.js");
+const Interpreter = require("./interpreter.js");
 var FetcherManager = require("./fetchermanager.js");
 var Communicator = require("./communicator.js");
 var Sentinel = require("./sentinel.js");
