@@ -1,5 +1,5 @@
 "use strict";
-process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'dev';
 console.log('Environment : "' + process.env.NODE_ENV +'"');
 
 const Anubis =require("./src/2/anubis.js")

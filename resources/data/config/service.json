@@ -32,6 +32,10 @@
 				"reboot": {
 					"method": "REBOOT",
 					"pattern": ["reboot"]
+				},
+				"help": {
+					"method": "HELP",
+					"pattern": ["help"]
 				}
 			}
 		},

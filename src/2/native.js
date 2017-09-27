@@ -13,6 +13,7 @@ module.exports = class Native extends Fetcher {
         this.addCommand('NEXT', this.next);
         this.addCommand('PREVIOUS', this.previous);
         this.addCommand('STOP', this.stop);
+        this.addCommand('HELP', this.help);
     }
     
     play(that, data, message) {
@@ -33,5 +34,29 @@ module.exports = class Native extends Fetcher {
 
     stop(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.remote('stop');
+    }
+
+    help(that, data, message) {
+        var server = that.anubis.smanager.getServer(data.serverID);
+        that.anubis.communicator.message(
+            server.text,
+            'Anubis is an audio-broadcast assistant, which allows you to share audio stream\'s simultaneously with your bitches.\n\n'
+            + 'The command structure should look like that one:\n'
+            + '"@<bot_name> <service> <arguments> <query>"\n'
+            + 'Here is the list of commands you can use with the Anubis :\n\n'
+            + 'Player :\n'
+            + '* Resume : play / resume\n'
+            + '* Pause : pause\n'
+            + '* Stop : stop\n'
+            + '* Next : next\n\n'
+            + 'Deezer <dzr / deezer>:\n'
+            + '* Add content to queue : <your_query>'
+            + '* INCOMING : Feed queue with an artist soundtrack : -artist <artist_name>'
+            + '* INCOMING : Feed queue with a genre soundtrack : -mix <genre_name>\n\n'
+            + 'Twitch <tw / twitch>:\n'
+            + '* Add audio-stream to queue: <your_query>\n\n'
+            + 'Bonus:\n'
+            + '* Go fuck yourself : origin'
+        );
     }
 }

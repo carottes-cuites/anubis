@@ -16,7 +16,21 @@ module.exports = class Server {
     }
 
     get text() {
-        return this.guild.defaultChannel;
+        var text = undefined;
+        this.guild.channels.forEach(
+            chan => {
+                if(chan.type == 'text' && chan.name == this.config.text.name) text = chan;
+            }
+        )
+        if (text == undefined) {
+            text = this.guild.defaultChannel;
+            console.error('Text channel missing.\nPlease create "' + this.config.text.name + '" text channel.');
+            this.communicator.message(
+                text,
+                'Text channel missing.\nPlease create "' + this.config.text.name + '" text channel.'
+            );
+        }
+        return text;
     }
 
     get voice() {
@@ -26,14 +40,11 @@ module.exports = class Server {
                 if(chan.type == 'voice' && chan.name == this.config.voice.name) voice = chan;
             }
         )
-		/*var voice = this.bot.channels.filter(chan => {
-	    		return chan.type == 'voice' && chan.name == "Bot";
-            }).first();*/
         if (voice == undefined) {
-            console.error('Voice channel missing. Please create "Music" voice channel.');
+            console.error('Voice channel missing.\nPlease create "Music" voice channel.');
             this.communicator.message(
                 this.text,
-                'Voice channel missing. Please create "' + this.config.voice.name + '" voice channel.'
+                '!!! Voice channel missing. Please create "' + this.config.voice.name + '" voice channel. !!!'
             );
         }
         return voice;
