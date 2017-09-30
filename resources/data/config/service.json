@@ -36,6 +36,10 @@
 				"help": {
 					"method": "HELP",
 					"pattern": ["help"]
+				},
+				"current": {
+					"method": "CURRENT",
+					"pattern": ["current", "playing"]
 				}
 			}
 		},
