@@ -3,7 +3,7 @@
   "version": "0.1.3",
   "description": "Anubis bot is an audio provider interface to get your favorite artists data, tracks, ... from any kind of services",
   "main": "index.js",
-  "environment": "dev",
+  "environment": "production",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

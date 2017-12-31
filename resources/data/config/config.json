@@ -1,8 +1,8 @@
 {
-	"nils": {
-		"id": "bot-nils",
-		"trigger": "nils",
-		"name": "Nils",
+	"bot": {
+		"id": "anubis-bot",
+		"trigger": "anubis",
+		"name": "Anubis",
 		"description": "Music information assistant",
 		"metadata": {
 			"origins": "https://www.youtube.com/watch?v=OSfxEOK0elM"
@@ -39,7 +39,8 @@
 		"appid": ""
 	},
 	"spotify": {
-		"token": "BQDFt56invZ0igcTKo9HeTG0pqm43i5xh4ufWezrCXpzBKXyb0NqD5ADO0R-IlZ1CNFosMHJ7axNu837bc0-AYoVapn_mMIpfp9tlNvu8ce8shibrhER7BSe8ZEWxHhItHLokgmkrA"
+		"token": "BQBg0rOjd8ATPqXlriHUQRbqPOidobSpJeBpyHLW6YBy6oUGJA5Ii2dQTj6nQ4U_bmjwsbofl0JCFJYW5_g4yCKmAGqsL72pa0UFH4wb11mMq_Q0CLxhIf8-hbPfK9UREb5qRu85Gg",
+		"oldtoken": "BQDFt56invZ0igcTKo9HeTG0pqm43i5xh4ufWezrCXpzBKXyb0NqD5ADO0R-IlZ1CNFosMHJ7axNu837bc0-AYoVapn_mMIpfp9tlNvu8ce8shibrhER7BSe8ZEWxHhItHLokgmkrA"
 	},
 	"twitch": {
 		"client": "54spadh41at1u05dv5ypq6aex98csn"

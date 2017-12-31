@@ -11,7 +11,8 @@ module.exports = class Configuration {
 	init() {
 		this.discord = config.discord;
 		this.dropbox = config.dropbox;
-		this.nils = config.nils;
+		this.bot = config.bot;
 		this.twitch = config.twitch;
+		this.spotify = config.spotify;
 	}
 }

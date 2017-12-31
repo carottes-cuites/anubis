@@ -32,9 +32,10 @@ module.exports = class Fetcher extends Essential{
         var options = {
             uri: this.uri,
             qs: {},
-            headers: { 'User-Agent': 'Request-Promise' },
+            headers: {},
             json: true
         };
+        options.headers['User-Agent'] = 'Request-Promise';
         if (uri != undefined) options.uri = uri;
         if (qs != undefined) {
             for(var q in qs) {

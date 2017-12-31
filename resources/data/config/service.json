@@ -95,7 +95,13 @@
 			"name": "Spotify",
 			"keywords": [
 				"spotify"
-			]
+			],
+			"cmds": {
+				"stream": {
+					"method": "STREAM",
+					"pattern": ["default"]
+				}
+			}
 		}
 	}
 }
