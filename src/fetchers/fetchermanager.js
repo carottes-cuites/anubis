@@ -6,6 +6,7 @@ const FetcherDZR = require("./fetcherdzr.js");
 const FetcherSC = require("./fetchersc.js");
 const FetcherST = require("./fetcherst.js");
 const FetcherTW = require("./fetchertw.js");
+const FetcherYT = require("./fetcheryt.js");
 const Native = require("./native.js");
 
 module.exports = class FetcherManager extends Essential {
@@ -24,6 +25,7 @@ module.exports = class FetcherManager extends Essential {
         this.add('soundcloud', new FetcherSC(this.anubis));
         this.add('spotify', new FetcherST(this.anubis));
         this.add('twitch', new FetcherTW(this.anubis));
+        this.add('youtube', new FetcherYT(this.anubis));
         this.add('native', new Native(this.anubis));
         for( var service  in this.services) {
             this.services[service].prepare();

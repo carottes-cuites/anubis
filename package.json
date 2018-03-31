@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "bufferutil": "^3.0.2",
-    "discord.js": "^11.1.0",
+    "discord.js": "^11.3.2",
     "dropbox": "^2.5.4",
     "erlpack": "github:hammerandchisel/erlpack",
     "ffmpeg": "0.0.4",
@@ -26,7 +26,8 @@
     "node-opus": "^0.2.6",
     "request": "^2.81.0",
     "request-promise": "^4.2.2",
-    "twitch-get-stream": "^0.4.0"
+    "twitch-get-stream": "^0.4.0",
+    "ytdl-core": "^0.20.2"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

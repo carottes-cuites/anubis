@@ -80,6 +80,42 @@ module.exports = class Player {
         }
     }
 
+    streamFlux(info, flux) {
+        return new Promise((resolve, reject) => {
+            var success = () => resolve({
+                data: 'success'
+            });
+            var fail = () => reject({
+                data: 'fail'
+            });
+            var chan = this.server.voice;
+            if (chan == undefined) return;
+            chan.join().then(connection => {
+                this.connection = connection;
+                return connection.playStream(flux);
+            }).then(dispatcher => {
+                this.dispatcher = dispatcher;
+                dispatcher.on('start', () => {
+                    console.log("Stream starts...");
+                    this.server.communicator.message(
+                        this.server.text,
+                        'Now playing ' + info.title
+                    );
+                    this.status = "playing";
+                });
+                dispatcher.on('end', () => {
+                    console.log("Stream end.");
+                    this.status = "idle";
+                    success();
+                    return true;
+                });
+            }).catch(err => {
+                console.error(err);
+                fail();
+            });
+        });
+    }
+
     stream() {
         var track = this.currentTrack;
         return new Promise((resolve, reject) => {

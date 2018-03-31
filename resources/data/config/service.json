@@ -102,6 +102,19 @@
 					"pattern": ["default"]
 				}
 			}
+		},
+		"youtube": {
+			"name": "Youtube",
+			"keywords": [
+				"youtube",
+				"yt"
+			],
+			"cmds": {
+				"stream": {
+					"method": "STREAM",
+					"pattern": ["default"]
+				}
+			}
 		}
 	}
 }

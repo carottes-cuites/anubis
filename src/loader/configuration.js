@@ -14,5 +14,6 @@ module.exports = class Configuration {
 		this.bot = config.bot;
 		this.twitch = config.twitch;
 		this.spotify = config.spotify;
+		this.youtube = config.youtube;
 	}
 }
