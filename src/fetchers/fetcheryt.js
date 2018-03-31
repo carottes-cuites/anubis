@@ -22,6 +22,11 @@ module.exports = class FetcherYT extends Fetcher {
 
     playlist(that, data, message) {
         console.log("Requested " + data.request);
+        let server = that.anubis.smanager.getServer(data.serverID);
+        server.communicator.message(
+            server.text,
+            'Fetching playlist\'s "' + data.request + '" data...' 
+        );
         youtube.playlistItems.list(
             {
                 key: that.anubis.config.youtube.api_key,
@@ -43,22 +48,20 @@ module.exports = class FetcherYT extends Fetcher {
                         )]
                     );
                     player.play();
+                    that.fetchPlaylist(that, data, results);
                 });
-                that.fetchPlaylist(that, data, results);
             }
         );
     }
 
     fetchPlaylist(that, data, results) {
-        console.log("fecthing playlist's videos");
         let videos = results.data.items;
         let player = that.anubis.smanager.getServer(data.serverID).player;
-        let video;
-        let url = that.uri + video.resourceId.videoId;
         console.log("Feeding queue...");
         for(let i = 1; i < videos.length; i++) {
-            video = videos[i].snippet;
-            url = that.uri + video.resourceId.videoId;
+            let video = videos[i].snippet;
+            let url = that.uri + video.resourceId.videoId;
+            console.log(url);
             ytdl.getInfo(url, (err, info) => {
                 let stream = ytdl(url, { filter : 'audioonly' });
                 player.add(

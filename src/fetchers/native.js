@@ -15,6 +15,7 @@ module.exports = class Native extends Fetcher {
         this.addCommand('STOP', this.stop);
         this.addCommand('HELP', this.help);
         this.addCommand('CURRENT', this.current);
+        this.addCommand('QUEUE', this.queue);
     }
     
     play(that, data, message) {
@@ -44,6 +45,22 @@ module.exports = class Native extends Fetcher {
             server.text,
             'Now playing "' + track.title + ' - ' + track.artist + '"'
         );
+    }
+
+    queue(that, data, message) {
+        var server = that.anubis.smanager.getServer(data.serverID);
+        let msg = "Queue list :";
+        let index = 0;
+        if (server.player.queue.length == 0) {
+            msg = "Queue list is empty.";
+        } else {
+            for (let index = 0; index < server.player.queue.length; index++) {
+                let item = server.player.queue[index];
+                msg += "\n";
+                msg += index + " :: " + item.title + (item.artist != "" ? " - " + item.artist : "");
+            }
+        }
+        that.anubis.communicator.message(server.text, msg);
     }
 
     help(that, data, message) {

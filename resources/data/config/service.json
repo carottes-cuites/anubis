@@ -40,6 +40,10 @@
 				"current": {
 					"method": "CURRENT",
 					"pattern": ["current", "playing"]
+				},
+				"queue": {
+					"method": "QUEUE",
+					"pattern": ["queue", "q"]
 				}
 			}
 		},
