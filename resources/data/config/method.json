@@ -7,6 +7,12 @@
 		],
 		"function": "FUNCTION_NAME"
 	}, {
+		"name": "Play playlist",
+		"pattern": [
+			"playlist"
+		],
+		"function": "PLAY_PLAYLIST"
+	},{
 		"name": "Play radio",
 		"pattern": [
 			"radio",

@@ -20,6 +20,12 @@
 			"artist"
 		],
 		"method": "PLAY_ARTIST"
+	},{
+		"name": "Play playlist",
+		"pattern": [
+			"playlist"
+		],
+		"method": "PLAY_PLAYLIST"
 	}, {
 		"name": "Dropbox",
 		"pattern": ["dbx", "dropbox"],

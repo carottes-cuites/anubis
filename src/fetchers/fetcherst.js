@@ -19,6 +19,14 @@ module.exports = class FetcherST extends Fetcher {
         return msg.replace(" ", "+");
     }
 
+    /**
+     * Stream content.
+     * @param {*} that 
+     * This object.
+     * @param {*} data 
+     * data to pass in request.
+     * @param {*} message 
+     */
     stream(that, data, message) {
         data.request = that.spotifyFormat(data.request);
         var options = that.formatRequest(

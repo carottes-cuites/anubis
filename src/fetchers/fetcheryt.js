@@ -15,6 +15,11 @@ module.exports = class FetcherYT extends Fetcher {
 
     prepare() {
         this.addCommand('STREAM', this.stream);
+        this.addCommand('PLAY_PLAYLIST', this.playlist);
+    }
+
+    playlist(that, data, message) {
+        console.log("Requested " + data.request);
     }
 
     stream(that, data, message) {
@@ -23,7 +28,15 @@ module.exports = class FetcherYT extends Fetcher {
         try {
             ytdl.getInfo(url, (err, info) => {
                 let stream = ytdl(url, { filter : 'audioonly' });
-                that.anubis.smanager.getServer(data.serverID).player.streamFlux(info, stream);
+                let player = that.anubis.smanager.getServer(data.serverID).player;
+                player.add(
+                    [player.formatToQueue(
+                        info.title,
+                        stream,
+                        ""
+                    )]
+                )
+                player.play();
             })
         } catch(error) {
             console.log(error);

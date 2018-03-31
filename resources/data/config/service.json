@@ -113,6 +113,10 @@
 				"stream": {
 					"method": "STREAM",
 					"pattern": ["default"]
+				},
+				"playlist": {
+					"method": "PLAY_PLAYLIST",
+					"pattern": ["playlist"]
 				}
 			}
 		}
