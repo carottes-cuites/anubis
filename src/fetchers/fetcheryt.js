@@ -1,6 +1,8 @@
 "use strict";
 
 const ytdl = require('ytdl-core');
+const google = require("googleapis");
+const youtube = google.google.youtube('v3');
 const Fetcher = require('./../fetchers/fetcher.js');
 
 module.exports = class FetcherYT extends Fetcher {
@@ -20,6 +22,68 @@ module.exports = class FetcherYT extends Fetcher {
 
     playlist(that, data, message) {
         console.log("Requested " + data.request);
+        youtube.playlistItems.list(
+            {
+                key: that.anubis.config.youtube.api_key,
+                part: 'id,snippet',
+                playlistId: data.request,
+                maxResult: 100,
+            },
+            (err, results) => {
+                let player = that.anubis.smanager.getServer(data.serverID).player;
+                let video = results.data.items[0].snippet;
+                let url = that.uri + video.resourceId.videoId;
+                ytdl.getInfo(url, (err, info) => {
+                    let stream = ytdl(url, { filter : 'audioonly' });
+                    player.add(
+                        [player.formatToQueue(
+                            info.title,
+                            stream,
+                            ""
+                        )]
+                    );
+                    player.play();
+                });
+                that.fetchPlaylist(that, data, results);
+            }
+        );
+    }
+
+    fetchPlaylist(that, data, results) {
+        console.log("fecthing playlist's videos");
+        let videos = results.data.items;
+        let player = that.anubis.smanager.getServer(data.serverID).player;
+        let video;
+        let url = that.uri + video.resourceId.videoId;
+        console.log("Feeding queue...");
+        for(let i = 1; i < videos.length; i++) {
+            video = videos[i].snippet;
+            url = that.uri + video.resourceId.videoId;
+            ytdl.getInfo(url, (err, info) => {
+                let stream = ytdl(url, { filter : 'audioonly' });
+                player.add(
+                    [player.formatToQueue(
+                        info.title,
+                        stream,
+                        ""
+                    )]
+                );
+            });
+        }
+        if (results.data.nextPageToken != undefined) {
+            youtube.playlistItems.list(
+                {
+                    key: that.anubis.config.youtube.api_key,
+                    pageToken: results.data.nextPageToken,
+                    part: 'id,snippet',
+                    playlistId: data.request,
+                    maxResult: 100,
+                },
+                (err, res) => {
+                    that.fetchPlaylist(that, data, res);
+                }
+            );
+        }
     }
 
     stream(that, data, message) {
