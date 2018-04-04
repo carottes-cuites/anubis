@@ -9,34 +9,38 @@ module.exports = class Player {
     init() {
         this.queue = new Array();
         this.status = "idle";
-        this.queueIndex = -1;
         this.dispatcher = undefined;
         this.connection = undefined;
         this.remote_message = '';
     }
 
     get currentTrack() {
-        return this.queue[this.queueIndex];
+        return this.queue[0];
+    }
+
+    get nextTrack() {
+        return this.queue[1];
     }
     
-    formatToQueue(title, streamURL, artist) {
+    formatToQueue(title, streamURL, artist, fetcher, data) {
         return {
             title: title,
             streamURL: streamURL,
-            artist: artist
+            artist: artist,
+            fetcher: fetcher,
+            data: data
         }
     }
 
     add(args) {
         if (Array.isArray(args)) {
+            let msg = 'Feeding queue with :';
             args.forEach(arg => {
-                console.log('"' + arg.title + ' - ' + arg.artist + '" added to queue.');
                 this.queue.push(arg);
-                this.server.communicator.message(
-                    this.server.text,
-                    '"' + arg.title + ' - ' + arg.artist + '" added to queue.'
-                );
+                msg += '\n* ' + arg.title + (arg.artist == "" ? '' : ' - ' + arg.artist);
             })
+            this.server.communicator.message(this.server.text, msg);
+            console.log(msg);
         }
     }
 
@@ -47,7 +51,6 @@ module.exports = class Player {
             }
             console.log("Queue cleared");
         } else console.log("Nothing to clear, queue is already empty");
-        this.queueIndex = -1;
         this.server.communicator.message(
             this.server.text,
             'No more track to play.'
@@ -57,7 +60,6 @@ module.exports = class Player {
     play() {
         if(this.queue.length > 0) {
             if(this.status == 'playing') return;
-            if(this.queueIndex == -1) this.next();
             this.stream().then(() => {
                 this.connection = undefined;
                 this.dispatcher = undefined;
@@ -80,6 +82,20 @@ module.exports = class Player {
         }
     }
 
+    // TODO
+    preload() {
+        if(this.nextTrack != undefined) {
+            console.log("PRELOADING data");
+            this.nextTrack.fetcher(
+                this.currentTrack.data
+            ).then(
+                (res) => {
+                    this.nextTrack.streamURL = res;
+                }
+            );
+        }
+    }
+
     stream() {
         var track = this.currentTrack;
         return new Promise((resolve, reject) => {
@@ -91,61 +107,82 @@ module.exports = class Player {
             });
             var chan = this.server.voice;
             if (chan == undefined) return;
-            chan.join().then(connection => {
-                this.connection = connection;
-                return connection.playStream(track.streamURL);
-            }).then(dispatcher => {
-                this.dispatcher = dispatcher;
-                dispatcher.on('start', () => {
-                    console.log("Stream starts...");
-                    this.server.communicator.message(
-                        this.server.text,
-                        'Now playing "' + track.title + ' - ' + track.artist + '"'
-                    );
-                    this.status = "playing";
-                });
-                dispatcher.on('end', () => {
-                    console.log("Stream end.");
-                    this.status = "idle";
-                    //dispatcher.end();
-                    success();
-                    return true;
-                });
-                /*dispatcher.on('speaking', () => {
-                    console.log("Streaming...");
-                });
-                dispatcher.on('start', () => {
-                    console.log("Stream starts...");
-                    this.status = "playing";
-                    this.nils.communicator.sendMessage(
-                        'Now playing "' + track.title + ' - ' + track.artist + '".',
-                        channels.text
-                    );
-                });
-                dispatcher.on('error', (err) => {
+            if (track.streamURL == undefined) {
+                track.fetcher(track.data).then((res) => {
+                    chan.join().then(connection => {
+                        this.connection = connection;
+                        return connection.playStream(res);
+                    }).then(dispatcher => {
+                        this.dispatcher = dispatcher;
+                        dispatcher.setBitrate("auto");
+                        dispatcher.on('start', () => {
+                            console.log("Stream starts...");
+                            this.server.communicator.message(
+                                this.server.text,
+                                'Now playing "' + track.title + ' - ' + track.artist + '"'
+                            );
+                            this.status = "playing";
+                        });
+                        dispatcher.on('end', () => {
+                            console.log("Stream end.");
+                            this.status = "idle";
+                            //dispatcher.end();
+                            success();
+                            return true;
+                        });
+                    }).catch(err => {
+                        console.error(err);
+                    });
+                }).catch((rej) => {
                     console.error(err);
                     fail();
-                });*/
-            }).catch(err => {
-                console.error(err);
-                fail();
-            });
+                });
+            } else {
+                chan.join().then(connection => {
+                    this.connection = connection;
+                    return connection.playStream(track.streamURL);
+                }).then(dispatcher => {
+                    this.dispatcher = dispatcher;
+                    dispatcher.on('start', () => {
+                        console.log("Stream starts...");
+                        this.server.communicator.message(
+                            this.server.text,
+                            'Now playing "' + track.title + ' - ' + track.artist + '"'
+                        );
+                        this.status = "playing";
+                    });
+                    dispatcher.on('end', () => {
+                        console.log("Stream end.");
+                        this.status = "idle";
+                        //dispatcher.end();
+                        success();
+                        return true;
+                    });
+                }).catch(err => {
+                    console.error(err);
+                });
+            }
         });
     }
 
+    /**
+     * When track is read or skipped.
+     */
+    trackRead() {
+        if (this.queue.length > 0) {
+            console.log("TRACK READ");
+            this.queue.shift();
+        }
+    }
+
     next() {
-        this.queueIndex++;
-        if(this.queueIndex >= this.queue.length) {
+        this.trackRead();
+        if(this.queue.length == 0) {
             console.log("Nothing more to play");
             this.empty();
             return false;
         }
         return true;
-    }
-
-    previous() {
-        this.queueIndex--;
-        if(this.queueIndex < 0) this.queueIndex = 0;
     }
 
     remote(method) {
@@ -173,7 +210,11 @@ module.exports = class Player {
             break;
             case 'next':
                 if (this.dispatcher != undefined) {
-                    if(this.queueIndex < this.queue.length - 1) {
+                    if(this.queue.length > 1) {
+                        this.server.communicator.message(
+                            this.server.text,
+                            'Skipping track...'
+                        );
                         this.dispatcher.end();
                         this.dispatcher = undefined;
                     } else {
@@ -187,6 +228,7 @@ module.exports = class Player {
             case 'stop':
                 if (this.dispatcher != undefined) {
                     this.dispatcher.end();
+                    this.connection.disconnect();
                     this.dispatcher = undefined;
                     this.server.communicator.message(
                         this.server.text,

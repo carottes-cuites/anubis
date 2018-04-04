@@ -60,7 +60,7 @@ module.exports = class Sentinel extends Essential {
                         this.anubis.smanager.getServer(data.serverID).text,
                         this.format(this.dumbMessage, [message.author])
                     );
-                    return;
+                    throw new Error("No service nor native method found");
                 } else {
                     console.log("Native command found");
                     data.service = native.service;
@@ -75,7 +75,7 @@ module.exports = class Sentinel extends Essential {
                         this.anubis.smanager.getServer(data.serverID).text,
                         this.format(this.dumbMessage, [message.author])
                     );
-                    return;
+                    throw new Error('Command "' + data.command.method + '" not found / registered for the service "' + service.name + '"');
                 }
                 data.request = this.anubis.interpreter.extractRequest(data);
             }
@@ -88,8 +88,7 @@ module.exports = class Sentinel extends Essential {
                 throw new Error(rej);
             });
         } catch(error) {
-            console.error(error);
-            console.error(data.request.split(">")[1]);
+            console.error(data.request);
             this.anubis.communicator.message(
                 this.anubis.smanager.getServer(data.serverID).text,
                 "Oups, something went wrong with the request \"" + data.request.split(">")[1] + "\"."

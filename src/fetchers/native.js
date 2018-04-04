@@ -11,7 +11,6 @@ module.exports = class Native extends Fetcher {
         this.addCommand('PLAY', this.play);
         this.addCommand('PAUSE', this.pause);
         this.addCommand('NEXT', this.next);
-        this.addCommand('PREVIOUS', this.previous);
         this.addCommand('STOP', this.stop);
         this.addCommand('HELP', this.help);
         this.addCommand('CURRENT', this.current);
@@ -20,10 +19,6 @@ module.exports = class Native extends Fetcher {
     
     play(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.remote('play');
-    }
-
-    previous(that, data, message) {
-        //that.anubis.smanager.getServer(data.serverID).player.remote('previous');
     }
 
     next(that, data, message) {
@@ -57,7 +52,7 @@ module.exports = class Native extends Fetcher {
             for (let index = 0; index < server.player.queue.length; index++) {
                 let item = server.player.queue[index];
                 msg += "\n";
-                msg += index + " :: " + item.title + (item.artist != "" ? " - " + item.artist : "");
+                msg += (index + 1) + " :: " + item.title + (item.artist != "" ? " - " + item.artist : "");
             }
         }
         that.anubis.communicator.message(server.text, msg);

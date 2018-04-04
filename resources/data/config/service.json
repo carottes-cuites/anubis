@@ -21,10 +21,6 @@
 					"method": "NEXT",
 					"pattern": ["next"]
 				},
-				"previous": {
-					"method": "PREVIOUS",
-					"pattern": ["previous"]
-				},
 				"clean": {
 					"method": "CLEAN",
 					"pattern": ["clean"]
