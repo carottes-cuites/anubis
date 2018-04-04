@@ -20,8 +20,11 @@ module.exports = class Fetcher extends Essential{
     }
 
     execute(data, message) {
-        if (data == undefined) return;
-        this.command(data.command.method)(this, data, message);
+        return new Promise((resolve, reject) => {
+            if (data == undefined) reject("Data empty");
+            this.command(data.command.method)(this, data, message);
+            resolve();
+        });
     }
 
     command(id) {

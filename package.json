@@ -5,6 +5,8 @@
   "main": "index.js",
   "environment": "dev",
   "scripts": {
+    "prod": "npm config set anubis-bot:environment production && node index.js",
+    "dev": "npm config set anubis-bot:environment dev && node index.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -9,6 +9,8 @@ module.exports = class Sentinel extends Essential {
 
     init(){
         super.init();
+        this.queueMessages = [];
+        this.processing = false;
         this.dumbMessage = "Stop calling me %s if you don't know how to make properly a request!";
     } 
     
@@ -29,6 +31,16 @@ module.exports = class Sentinel extends Essential {
 
     onMessage(message) {
         if (!this.validate(message)) return;
+        this.addMessageToQueue(message);
+        if (!this.processing) this.processMessage(message);
+    }
+
+    addMessageToQueue(message) {
+        this.queueMessages.push(message);
+    }
+
+    processMessage(message) {
+        this.processing = true;
         var data = {
             request: message.content
         };
@@ -66,7 +78,20 @@ module.exports = class Sentinel extends Essential {
             }
             data.request = this.anubis.interpreter.extractRequest(data);
         }
-        data.service.obj.execute(data, message);
+        data.service.obj.execute(data, message).then(
+            (resolve) => {
+                this.processing = false;
+                this.messageProcessed();
+            }
+        ).catch((rej) => {
+            this.processing = false;
+            this.messageProcessed();
+        });
+    }
+
+    messageProcessed() {
+        if (this.queueMessages.length > 0) this.queueMessages.shift();
+        if (this.queueMessages.length > 0) this.processMessage(this.queueMessages[0]);
     }
 
     validate(message) {
