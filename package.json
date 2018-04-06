@@ -5,9 +5,11 @@
   "main": "index.js",
   "environment": "dev",
   "scripts": {
-    "build_dev": "webpack --mode development",
+    "build_release": "npm run \"build_prod\" && mv build/app.js release/app.js",
     "build_prod": "NODE_ENV=production webpack --progress --mode production",
+    "build_dev": "webpack --mode development",
     "start": "node ./src/index.js",
+    "start_release": "node ./release/app.js",
     "start_build": "node ./build/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch"
