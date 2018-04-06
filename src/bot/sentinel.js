@@ -26,7 +26,7 @@ module.exports = class Sentinel extends Essential {
 
     onReady() {
         console.log("Bot is ready to communicate");
-        if(process.env.NODE_ENV == "dev") this.anubis.communicator.broadcast("I am back on track folks!");
+        if(process.env.NODE_ENV == "development") this.anubis.communicator.broadcast("I am back on track folks!");
     }
 
     onMessage(message) {
