@@ -1,8 +1,13 @@
 "use strict";
 
+let Anubis = require('./../bot/anubis.js');
 const Fetcher = require('./../fetchers/fetcher.js');
 
 module.exports = class Native extends Fetcher {
+    /**
+     * 
+     * @param {Anubis} anubis 
+     */
     constructor(anubis) {
         super('native', anubis);
     }
@@ -21,8 +26,15 @@ module.exports = class Native extends Fetcher {
         that.anubis.smanager.getServer(data.serverID).player.remote('play');
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     next(that, data, message) {
-        that.anubis.smanager.getServer(data.serverID).player.remote('next');
+        that.anubis.smanager.getServer(data.serverID).player.next();
+        //that.anubis.smanager.getServer(data.serverID).player.remote('next');
     }
 
     pause(that, data, message) {
@@ -30,7 +42,8 @@ module.exports = class Native extends Fetcher {
     }
 
     stop(that, data, message) {
-        that.anubis.smanager.getServer(data.serverID).player.remote('stop');
+        that.anubis.smanager.getServer(data.serverID).player.stop();
+        //that.anubis.smanager.getServer(data.serverID).player.remote('stop');
     }
 
     current(that, data, message) {

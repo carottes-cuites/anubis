@@ -4,8 +4,14 @@ const ytdl = require('ytdl-core');
 const google = require("googleapis");
 const youtube = google.google.youtube('v3');
 const Fetcher = require('./../fetchers/fetcher.js');
+const Anubis = require('./../bot/anubis.js');
+let Track = require('./../player/track.js');
 
 module.exports = class FetcherYT extends Fetcher {
+    /**
+     * 
+     * @param {Anubis} anubis 
+     */
     constructor(anubis) {
         super("Youtube", anubis);
     }
@@ -48,7 +54,8 @@ module.exports = class FetcherYT extends Fetcher {
     fetchData(data) {
         return new Promise((res, rej) => {
             try {
-                let stream = ytdl(data.url, data.options);
+                let stream;
+                ytdl(data.url, data.options).pipe(stream);
                 res(stream);
             } catch(error) {
                 rej(error);
@@ -113,6 +120,12 @@ module.exports = class FetcherYT extends Fetcher {
         });
     }
 
+    /**
+     * 
+     * @param {FetcherYT} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     stream(that, data, message) {
         var url = that.uri + data.request;
         console.log("STREAM YOUTUBE");
@@ -120,6 +133,8 @@ module.exports = class FetcherYT extends Fetcher {
             ytdl.getInfo(url, (err, info) => {
                 let stream = ytdl(url, { filter : 'audioonly' });
                 let player = that.anubis.smanager.getServer(data.serverID).player;
+                //region OLD PLAYER
+                /*
                 player.add(
                     [player.formatToQueue(
                         info.title,
@@ -128,6 +143,16 @@ module.exports = class FetcherYT extends Fetcher {
                     )]
                 )
                 player.play();
+                */
+                //endregion
+                //region PLAYER REWORKED
+                let track = new Track(
+                    info.title,
+                    "",
+                    stream
+                );
+                player.feed(track);
+                //endregion
             })
         } catch(error) {
             console.log(error);

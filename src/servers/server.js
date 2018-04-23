@@ -1,8 +1,19 @@
+//import { VoiceChannel, TextChannel } from "discord.js";
+
 "use strict";
 
-var Player = require("./../player/player.js");
+let Player = require("./../player/player.js");
+let PlayerReworked = require("./../player/playerReworked.js");
+let Communicator = require("./../dialog/communicator.js");
 
 module.exports = class Server {
+    /**
+     * 
+     * @param {*} guild 
+     * @param {*} bot 
+     * @param {Communicator} communicator 
+     * @param {*} config 
+     */
     constructor(guild, bot, communicator, config) {
         this.bot = bot;
         this.guild = guild;
@@ -12,9 +23,20 @@ module.exports = class Server {
     }
 
     init() {
-        this.player = new Player(this);
+        this.mPlayer = new PlayerReworked(this);
+        //this.player = new Player(this);
     }
 
+    /**
+     * @return {PlayerReworked}
+     */
+    get player() {
+        return this.mPlayer;
+    }
+
+    /**
+     * @return {TextChannel} Text channel.
+     */
     get text() {
         var text = undefined;
         this.guild.channels.forEach(
@@ -33,6 +55,9 @@ module.exports = class Server {
         return text;
     }
 
+    /**
+     * @return {VoiceChannel} Bot's dedicated voice channel.
+     */
     get voice() {
         var voice = undefined;
         this.guild.channels.forEach(

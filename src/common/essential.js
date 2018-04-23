@@ -1,10 +1,19 @@
 "use strict";
 
+let Anubis = require('./../bot/anubis.js');
+
 module.exports = class Essential {
-    
+    /**
+     * 
+     * @param {Anubis} anubis 
+     */
     constructor(anubis) {
         this.init();
-        this.anubis = anubis;
+        this.mAnubis = anubis;
+    }
+
+    get anubis() {
+        return this.mAnubis;
     }
 
     init() {}

@@ -1,3 +1,5 @@
+//import { TextChannel } from "discord.js";
+
 "use strict";
 
 var Essential = require("./../common/essential.js");
@@ -13,6 +15,12 @@ module.exports = class Communicator extends Essential {
         });
     }
 
+    /**
+     * 
+     * @param {TextChannel} channel Text channel to communicate to.
+     * @param {message} content Messagr to share.
+     * @param {*} focuses Deprecated parameter. Keep it "undefined".
+     */
     message(channel, content, focuses) {
         channel.send(content).then(elem => {
             console.log('Message sent : "' + content + '"');

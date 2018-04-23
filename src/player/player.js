@@ -111,7 +111,9 @@ module.exports = class Player {
                 track.fetcher(track.data).then((res) => {
                     chan.join().then(connection => {
                         this.connection = connection;
-                        return connection.playStream(res);
+                        return connection.playStream(res, {
+                            passes: 3
+                        });
                     }).then(dispatcher => {
                         this.dispatcher = dispatcher;
                         dispatcher.setBitrate("auto");

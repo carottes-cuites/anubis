@@ -22,6 +22,11 @@ module.exports = class ServerManager {
         delete this.servers[id];
     }
 
+    /**
+     * 
+     * @param {String} id 
+     * @return {Server} Wanted server.
+     */
     getServer(id) {
         return this.servers[id];
     }

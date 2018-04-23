@@ -8,6 +8,10 @@ var Sentinel = require("./../bot/sentinel.js");
 var ServerManager = require("./../servers/servermanager.js");
 
 module.exports = class Anubis {
+    /**
+     * 
+     * @param {Object} config 
+     */
     constructor(config) {
         this.config = config;
         this.init();
@@ -19,8 +23,19 @@ module.exports = class Anubis {
         this.interpreter = new Interpreter(this);
         this.fetcherManager = new FetcherManager(this);
         this.communicator = new Communicator(this);
-        this.smanager = new ServerManager(this);
+        this.mSmanager = new ServerManager(this);
     }
+
+    //region GETTER
+
+    /**
+     * @return {ServerManager}
+     */
+    get smanager() {
+        return this.mSmanager;
+    }
+
+    //endregion
 
     prepare() {
         this.fetcherManager.prepare();
@@ -45,7 +60,8 @@ module.exports = class Anubis {
 
     connect() {
         console.log('Trying to communicate with "Discord" server...');
-		this.bot.login(this.config.discord[process.env.NODE_ENV].token);
+        let env = process.env.NODE_ENV == undefined ? "development" : process.env.NODE_ENV;
+		this.bot.login(this.config.discord[env].token);
     }
 
     disconnect() {}

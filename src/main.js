@@ -10,7 +10,8 @@ module.exports = class Main {
 	}
 
 	init() {
-		console.log('Environment defined : "' + process.env.NODE_ENV +'"');
+        let env = process.env.NODE_ENV == undefined ? "development" : process.env.NODE_ENV;
+		console.log('Environment defined : "' + env +'"');
 		this.config = new Configuration();
 		this.anubis = new Anubis(this.config);
 	}
