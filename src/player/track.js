@@ -8,12 +8,14 @@ module.exports = class Track {
      * @param {String} title 
      * @param {String} artist 
      * @param {ReadableStream} streamSource 
+     * @param {String} time
      */
-    constructor(title, artist, streamSource) {
+    constructor(title, artist, streamSource, time) {
         this.mId = "track-" + new Date().getTime();
         this.mTitle = title;
         this.mArtist = artist;
         this.mStreamSource = streamSource;
+        this.mTime = time;
     }
 
     /**
@@ -49,5 +51,12 @@ module.exports = class Track {
      */
     get streamSource() {
         return this.mStreamSource;
+    }
+
+    /**
+     * @return {String} Time in hh:mm:ss
+     */
+    get time() {
+        return this.mTime;
     }
 }

@@ -79,14 +79,23 @@ module.exports = class Queue {
         return this.mEventEmitter;
     }
 
+    /**
+     * @return {Track[]} Queue list
+     */
+    get content() {
+        return this.mList;
+    }
+
     skip() {
-        if (this.mList.length > 0) {
+        return new Promise((resolve, reject) => {
+            if (this.mList.length == 0) reject("Queue is empty");
             this.mList.shift();
-            if(this.mList.length == 1) {
-                this.mEventEmitter.emit(this.mEvents.LAST_ITEM_REACHED);
+            if( this.mList.length == 1) {
+                resolve("Last item reached");
+                return;
             }
-        } else {
-            throw new Error(this.mErrors.ERROR_SKIP_QUEUE_EMPTY);
-        }
+            resolve("Skipping");
+        });
+        
     }
 }

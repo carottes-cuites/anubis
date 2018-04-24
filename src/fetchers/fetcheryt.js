@@ -133,23 +133,15 @@ module.exports = class FetcherYT extends Fetcher {
             ytdl.getInfo(url, (err, info) => {
                 let stream = ytdl(url, { filter : 'audioonly' });
                 let player = that.anubis.smanager.getServer(data.serverID).player;
-                //region OLD PLAYER
-                /*
-                player.add(
-                    [player.formatToQueue(
-                        info.title,
-                        stream,
-                        ""
-                    )]
-                )
-                player.play();
-                */
-                //endregion
                 //region PLAYER REWORKED
+                let time = parseInt(info.length_seconds);
+                time = Math.floor(time / 3600) + "h " + Math.floor(time / 60) + "m " + (time % 60)
+                console.log(time);
                 let track = new Track(
                     info.title,
                     "",
-                    stream
+                    stream,
+                    time
                 );
                 player.feed(track);
                 //endregion

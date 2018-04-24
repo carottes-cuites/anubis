@@ -47,7 +47,7 @@ module.exports = class PlayerReworked {
         this.queue.eventEmitter.addListener(
             this.queue.events.QUEUE_CLEARED,
             () => {
-                this.alert("The queue is empty.");
+                this.alert("Nothing more to play. Please feed me.");
             }
         );
         
@@ -70,8 +70,16 @@ module.exports = class PlayerReworked {
                 this.alert("Stream paused.")
             }
         );*/
-        //pause
-        //stop
+        this.core.eventEmitter.addListener(
+            this.core.events.STREAM_END,
+            () => {
+                this.skip()
+                    .catch(
+                        (rej) => {
+                          this.stop();  
+                        });
+            }
+        );
     }
 
     //endregion
@@ -101,6 +109,23 @@ module.exports = class PlayerReworked {
 
     //ENDREGION
     //region ACTIONS
+
+    inspectQueue() {
+        let content = this.queue.content;
+        if (content.length == 0) {
+            this.alert("Queue is empty.")
+            return;
+        }
+        let message = "Look at my queue :";
+        let index = 0;
+        content.forEach(
+            (track) => {
+                message += "\n " + (index == 0 ? "(Now playing) :: " : index + ":: ") + track.formattedName + " :: " + track.time;
+                index++;
+            }
+        );
+        this.alert(message);
+    }
 
     /**
      * Feed the queue with a track.
@@ -186,12 +211,8 @@ module.exports = class PlayerReworked {
      */
     next() {
         this.core.stop()
-            .then(
-                () => {
-                    this.queue.skip();
-                    this.play();
-                }
-            ).catch(
+            .then()
+            .catch(
                 /**
                  * @param {String} rej
                  */
@@ -199,6 +220,16 @@ module.exports = class PlayerReworked {
                     this.alertError("Error on next", rej);
                 }
             );
+    }
+
+    skip() {
+        this.queue.skip()
+            .then(() => {
+                this.play();
+            }).catch((rej) => {
+                this.alertError("Error on next: " + rej)
+            }
+    );
     }
 
     stop() {

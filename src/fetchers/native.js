@@ -55,7 +55,15 @@ module.exports = class Native extends Fetcher {
         );
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     queue(that, data, message) {
+        that.anubis.smanager.getServer(data.serverID).player.inspectQueue();
+        return;
         var server = that.anubis.smanager.getServer(data.serverID);
         let msg = "Queue list :";
         let index = 0;

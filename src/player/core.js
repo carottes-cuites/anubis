@@ -53,6 +53,9 @@ module.exports = class Core {
      */
     defineStreamDispatcherEvents(dispatcher) {
         console.info("Define stream dispatcher");
+        if (this.streamDispatcher != undefined) {
+            this.streamDispatcher = undefined;
+        }
         this.streamDispatcher = dispatcher;
         this.streamDispatcher.on("start", () => {
             this.eventEmitter.emit(this.events.STREAM_START);
