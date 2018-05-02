@@ -65,7 +65,7 @@ module.exports = class Core {
         });
         this.streamDispatcher.on("end", () => {
             this.streamDispatcher = undefined;
-            this.eventEmitter.emit(this.events.STREAM_END, "stream_end");
+            this.eventEmitter.emit(this.events.STREAM_END);
         })
     }
 
