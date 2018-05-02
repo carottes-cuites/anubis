@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joris Darras"
+		],
+		"last-updated": "29-04-2018",
+		"locale": "en",
+		"message-documentation": "Used for Anubis bot usages."
+	},
+	"error_global": "Sorry an error %s occured.\nHere is a poop to calm your frustration : 💩 \nPlease can try again later.",
+	"error_core_global": "An error occured with the stream.",
+	"error_core_stream_fail_pause": "Sorry, I failed to pause the stream. Please try again.",
+	"error_core_stream_fail_resume": "I failed to resume the stream, sorry.",
+	"error_core_stream_already_started": "The stream has already started.",
+	"error_core_stream_undefined": "I cannot do anything, the stream seems to be empty.",
+	"error_core_stream_track_no_stream": "The wanted track doesn't seem to have a stream attached.",
+	"error_queue_global": "An error occured with the queue.",
+	"error_queue_feed_track_undefined": "Someone tried to feed me with crap!",
+	"error_queue_skip_empty": "No more track in the queue.",
+	"error_player_voice_channel_disconnected": "I am not connected to a voice channel yet.",
+	"event_core_stream_start": "The stream starts.",
+	"event_core_stream_stopped": "The stream is stopped.",
+	"event_core_stream_end": "The stream has ended.",
+	"event_queue_cleared": "Queue has been cleared.",
+	"event_queue_last_item_reached": "Last item of the queue reached.",
+    "event_queue_feeded": "Queue has been feeded.",
+    "event_queue_skipping": "Skipping track",
+	"message_player_next": "Skipping track",
+	"message_player_now_playing": "Now playing \"%s\"",
+	"message_player_queue_empty": "Queue is empty",
+	"message_player_queue_content": "Look at my queue : %s",
+	"message_player_queue_now_playing": "(Now playing) :: %s :: %s",
+	"message_player_queue_track": "%s :: %s :: %s",
+	"message_player_queue_feeded": "Queue feeded with %s",
+	"message_player_stream_is_paused": "Stream is paused",
+	"message_player_stream_is_resumed": "Stream is resumed",
+	"message_player_stream-is_stopped": "Stream is stopped"
+}

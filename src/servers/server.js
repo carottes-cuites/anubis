@@ -1,6 +1,6 @@
-//import { VoiceChannel, TextChannel } from "discord.js";
-
 "use strict";
+
+//import { VoiceChannel, TextChannel, Client, VoiceConnection } from "discord.js";
 
 let Player = require("./../player/player.js");
 let PlayerReworked = require("./../player/playerReworked.js");
@@ -10,7 +10,7 @@ module.exports = class Server {
     /**
      * 
      * @param {*} guild 
-     * @param {*} bot 
+     * @param {Client} bot 
      * @param {Communicator} communicator 
      * @param {*} config 
      */
@@ -59,7 +59,20 @@ module.exports = class Server {
      * @return {VoiceChannel} Bot's dedicated voice channel.
      */
     get voice() {
-        var voice = undefined;
+        let voice = undefined;
+        //If bot already exist in a voicechannel
+        this.bot.voiceConnections.forEach(
+            (voiceConnection) => {
+                voiceConnection.channel.members.forEach(
+                    (guildMember) => {
+                        if (guildMember.user.id == this.bot.user.id) {
+                            return voiceConnection.channel;
+                        }
+                    }
+                )
+            }
+        );
+        //If bot doesn't exist in another channel
         this.guild.channels.forEach(
             chan => {
                 if(chan.type == 'voice' && chan.name == this.config.voice.name) voice = chan;

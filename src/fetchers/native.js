@@ -13,7 +13,7 @@ module.exports = class Native extends Fetcher {
     }
 
     prepare() {
-        this.addCommand('PLAY', this.play);
+        this.addCommand('PLAY', this.resume);
         this.addCommand('PAUSE', this.pause);
         this.addCommand('NEXT', this.next);
         this.addCommand('STOP', this.stop);
@@ -22,8 +22,14 @@ module.exports = class Native extends Fetcher {
         this.addCommand('QUEUE', this.queue);
     }
     
-    play(that, data, message) {
-        that.anubis.smanager.getServer(data.serverID).player.remote('play');
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
+    resume(that, data, message) {
+        that.anubis.smanager.getServer(data.serverID).player.resume();//.remote('play');
     }
 
     /**
@@ -37,15 +43,33 @@ module.exports = class Native extends Fetcher {
         //that.anubis.smanager.getServer(data.serverID).player.remote('next');
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     pause(that, data, message) {
-        that.anubis.smanager.getServer(data.serverID).player.remote('pause');
+        that.anubis.smanager.getServer(data.serverID).player.pause();//remote('pause');
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     stop(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.stop();
         //that.anubis.smanager.getServer(data.serverID).player.remote('stop');
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     current(that, data, message) {
         var server = that.anubis.smanager.getServer(data.serverID);
         var track = server.player.currentTrack;
@@ -79,6 +103,12 @@ module.exports = class Native extends Fetcher {
         that.anubis.communicator.message(server.text, msg);
     }
 
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     help(that, data, message) {
         var server = that.anubis.smanager.getServer(data.serverID);
         that.anubis.communicator.message(

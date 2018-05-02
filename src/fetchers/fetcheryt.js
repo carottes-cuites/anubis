@@ -131,11 +131,17 @@ module.exports = class FetcherYT extends Fetcher {
         console.log("STREAM YOUTUBE");
         try {
             ytdl.getInfo(url, (err, info) => {
-                let stream = ytdl(url, { filter : 'audioonly' });
+                let stream = ytdl(
+                    url,
+                    {
+                        quality: 'highestaudio',
+                        filter : 'audioonly'
+                    }
+                );
                 let player = that.anubis.smanager.getServer(data.serverID).player;
                 //region PLAYER REWORKED
                 let time = parseInt(info.length_seconds);
-                time = Math.floor(time / 3600) + "h " + Math.floor(time / 60) + "m " + (time % 60)
+                time = Math.floor(time / 3600) + "h" + Math.floor(time / 60) + "m" + (time % 60) + "s"
                 console.log(time);
                 let track = new Track(
                     info.title,
@@ -150,6 +156,5 @@ module.exports = class FetcherYT extends Fetcher {
             console.log(error);
             // message " no track playable "
         }
-        console.log("ENDD");
     }
 }

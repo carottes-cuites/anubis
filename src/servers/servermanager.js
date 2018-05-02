@@ -1,7 +1,13 @@
 "use strict";
 
-var Server = require("./server.js");
+let Server = require("./server.js");
+let Anubis = require("./../bot/anubis.js");
+
 module.exports = class ServerManager {
+    /**
+     * 
+     * @param {Anubis} anubis 
+     */
     constructor(anubis) {
         this.bot = anubis.bot;
         this.chanConfig = anubis.config.discord.channel;

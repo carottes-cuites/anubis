@@ -2,6 +2,8 @@
 
 let Track = require("./track.js");
 let EventEmitter = require('events');
+let ErrorPlayer = require("./errorplayer.js");
+let __ = require("i18n").__;
 
 module.exports = class Queue {
     constructor() {
@@ -13,18 +15,23 @@ module.exports = class Queue {
         this.mEventEmitter = new EventEmitter();
         this.mEvents = {
             QUEUE_CLEARED : "event_queue_cleared",
-            LAST_ITEM_REACHED : "event_last_item",
+            LAST_ITEM_REACHED : "event_queue_last_item_reached",
             QUEUE_FEEDED : "event_queue_feeded",
+            SKIPPING: "event_queue_skipping"
         }
         this.mErrors = {
             ERROR : "error_queue",
-            ERROR_SKIP_QUEUE_EMPTY : "error_queue_skip_empty"
+            ERROR_QUEUE_FEED_TRACK_UNDEFINED : "error_queue_feed_track_undefined",
+            ERROR_QUEUE_SKIP_EMPTY : "error_queue_skip_empty"
         }
     }
 
     clear() {
-        this.mList = [];
-        this.mEventEmitter.emit(this.mEvents.QUEUE_CLEARED);
+        console.info("Queue - Clear");
+        if(this.mList.length > 0) {
+            this.mList = [];
+            this.mEventEmitter.emit(this.mEvents.QUEUE_CLEARED);
+        }
     }
 
     /**
@@ -32,14 +39,16 @@ module.exports = class Queue {
      * @param {Track} track 
      */
     feed(track) {
+        console.info("Queue - Feed");
         return new Promise(
             (resolve, reject) => {
-                try {
-                    this.mList.push(track);
-                    resolve(track);
-                } catch(error) {
-                    reject(error);
+                if (track == undefined) {
+                    reject(
+                        new ErrorPlayer(this.errors.ERROR_QUEUE_FEED_TRACK_UNDEFINED)
+                    );
                 }
+                this.mList.push(track);
+                resolve(track);
             }
         );
     }
@@ -87,15 +96,27 @@ module.exports = class Queue {
     }
 
     skip() {
+        console.info("Queue - Skip");
         return new Promise((resolve, reject) => {
-            if (this.mList.length == 0) reject("Queue is empty");
-            this.mList.shift();
-            if( this.mList.length == 1) {
-                resolve("Last item reached");
-                return;
+            if (this.mList.length == 0) {
+                reject(
+                    new ErrorPlayer(this.errors.ERROR_QUEUE_SKIP_EMPTY)
+                );
             }
-            resolve("Skipping");
+            this.mList.shift();
+            switch (this.mList.length) {
+                case 0:
+                    reject(
+                        new ErrorPlayer(this.errors.ERROR_QUEUE_SKIP_EMPTY)
+                    );
+                break;
+                case 1:
+                    resolve(__(this.events.LAST_ITEM_REACHED));
+                break;
+                default:
+                    resolve(__(this.events.SKIPPING));
+                break;
+            }
         });
-        
     }
 }

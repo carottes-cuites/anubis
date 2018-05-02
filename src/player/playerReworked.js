@@ -1,9 +1,11 @@
 "use strict";
 
+let __ = require("i18n").__;
 let Queue = require("./queue.js");
 let Core = require("./core.js");
 let Track = require("./track.js");
 let Server = require("./../servers/server.js");
+let ErrorPlayer = require("./errorplayer.js");
 
 module.exports = class PlayerReworked {
     //region INITIALIZER
@@ -31,53 +33,26 @@ module.exports = class PlayerReworked {
      */
     addEvents() {
         //Queue related
-        /*this.queue.eventEmitter.addListener(
-            this.queue.events.QUEUE_FEEDED,
-            () => {
-                if (this.core.isPlaying()) return;
-                this.play();
-            }
-        );*/
         this.queue.eventEmitter.addListener(
             this.queue.events.LAST_ITEM_REACHED,
             () => {
-                this.alert("Last track to play");
+                this.alert(__("event_queue_last_item_reached"));
             }
         );
         this.queue.eventEmitter.addListener(
             this.queue.events.QUEUE_CLEARED,
             () => {
-                this.alert("Nothing more to play. Please feed me.");
+                this.alert(__("event_queue_cleared"));
             }
         );
         
         //Core related
-        /*this.core.eventEmitter.addListener(
-            this.core.events.STREAM_START,
-            () => {
-                this.alert("Stream has started.")
-            }
-        );
-        this.core.eventEmitter.addListener(
-            this.core.events.STREAM_PAUSED,
-            () => {
-                this.alert("Stream paused.")
-            }
-        );
-        this.core.eventEmitter.addListener(
-            this.core.events.STREAM_PAUSED,
-            () => {
-                this.alert("Stream paused.")
-            }
-        );*/
         this.core.eventEmitter.addListener(
             this.core.events.STREAM_END,
             () => {
-                this.skip()
-                    .catch(
-                        (rej) => {
-                          this.stop();  
-                        });
+                if (this.checkConnectionAlive()) {
+                    this.skip();
+                }
             }
         );
     }
@@ -90,7 +65,6 @@ module.exports = class PlayerReworked {
      * @param {String} message Message to prompt to user channel.
      */
     alert(message) {
-        console.log(message);
         this.server.communicator.message(
             this.server.text,
             message
@@ -98,32 +72,44 @@ module.exports = class PlayerReworked {
     }
 
     /**
-     * 
-     * @param {String} message 
-     * @param {Error} error 
+     * Alert and log an error.
+     * @param {ErrorPlayer} error 
      */
-    alertError(message, error) {
-        this.alert(message);
-        console.error(error.message);
+    alertError(error) {
+        this.alert(error.userMessage);//__("error_global"));
+        this.logError(error);
     }
 
-    //ENDREGION
+    /**
+     * 
+     * @param {ErrorPlayer} error 
+     */
+    logError(error) {
+        console.error("Error triggered : " + error.message); //error.stack
+    }
+
+    //endregion
     //region ACTIONS
 
     inspectQueue() {
         let content = this.queue.content;
         if (content.length == 0) {
-            this.alert("Queue is empty.")
+            this.alert(__("message_player_queue_empty"));
             return;
         }
-        let message = "Look at my queue :";
+        let message = "";
         let index = 0;
         content.forEach(
             (track) => {
-                message += "\n " + (index == 0 ? "(Now playing) :: " : index + ":: ") + track.formattedName + " :: " + track.time;
+                if (index == 0) {
+                    message += "\n" + __("message_player_queue_now_playing", track.formattedName, track.time);
+                } else {
+                    message += "\n" + __("message_player_queue_track", index, track.formattedName, track.time);
+                }
                 index++;
             }
         );
+        message = __("message_player_queue_content", message);
         this.alert(message);
     }
 
@@ -138,9 +124,10 @@ module.exports = class PlayerReworked {
                  * @param {Track} res
                  */
                 (res) => {
-                    this.alert("Queue feeded with " + res.formattedName);
-                    if (this.core.isPlaying()) return;
-                    this.play();
+                    this.alert(__("message_player_queue_feeded", res.formattedName));
+                    if (!this.core.isPlaying()) {
+                        this.play();
+                    }
                 }
             );
     }
@@ -149,6 +136,10 @@ module.exports = class PlayerReworked {
      * Play the stream.
      */
     play() {
+        if (this.queue.currentTrack == undefined) {
+            console.error(__("error_queue_feed_track_undefined"));
+            return;
+        }
         this.server.voice.join().then(
             connection => {
                 return this.core.play(
@@ -161,15 +152,17 @@ module.exports = class PlayerReworked {
             }
         ).then(
             /**
-             * @param {Track} res
+             * @param {Track} res Track playing.
              */
             (res) => {
-                let message = "Now playing " + res.formattedName;
-                this.alert(message);
+                this.alert(__("message_player_now_playing", res.formattedName));
             }
         ).catch(
+            /**
+             * @return {ErrorPlayer} Error.
+             */
             (rej) => {
-                this.alert(rej);
+                this.alertError(rej);
             }
         );
     }
@@ -178,14 +171,20 @@ module.exports = class PlayerReworked {
      * Pause the stream.
      */
     pause() {
+        if (!this.checkConnectionAlive()) {
+            return;
+        }
         this.core.pause()
-            .then(this.alert)
-            .catch(
+            .then(
+                () => {
+                    this.alert(__("message_player_stream_is_paused"));
+                }
+            ).catch(
                 /**
-                 * @param {String} rej
+                 * @param {ErrorPlayer} rej
                  */
                 (rej) => {
-                    this.alertError("Error on pause", rej);
+                    this.alertError(rej);
                 }
             );
     }
@@ -194,14 +193,20 @@ module.exports = class PlayerReworked {
      * Resume the stream.
      */
     resume() {
+        if (!this.checkConnectionAlive()) {
+            return;
+        }
         this.core.resume()
-            .then(this.alert)
-            .catch(
+            .then(
+                () => {
+                    this.alert(__("message_player_stream_is_resumed"));
+                }
+            ).catch(
                 /**
-                 * @param {String} rej
+                 * @param {ErrorPlayer} rej
                  */
                 (rej) => {
-                    this.alertError("Error on resume", rej);
+                    this.alertError(rej);
                 }
             );
     }
@@ -210,48 +215,87 @@ module.exports = class PlayerReworked {
      * Skip the current track.
      */
     next() {
+        if (!this.checkConnectionAlive()) {
+            return;
+        }
         this.core.stop()
             .then()
             .catch(
                 /**
-                 * @param {String} rej
+                 * @param {ErrorPlayer} rej
                  */
                 (rej) => {
-                    this.alertError("Error on next", rej);
+                    this.alertError(rej);
                 }
             );
     }
 
     skip() {
+        if (!this.checkConnectionAlive()) {
+            console.log("Connection is not alive man");
+            return;
+        }
         this.queue.skip()
-            .then(() => {
-                this.play();
-            }).catch((rej) => {
-                this.alertError("Error on next: " + rej)
-            }
-    );
+            .then(
+                /**
+                 * @param {String}
+                 */
+                (res) => {
+                    this.alert(res);
+                    this.play();
+                }
+            ).catch(
+                /**
+                 * @param {ErrorPlayer} rej
+                 */
+                (rej) => {
+                    this.alertError(rej)
+                }
+            );
     }
 
     stop() {
-        this.server.voice.connection.disconnect();
+        if (this.checkConnectionAlive()) {
+            console.log("Player - Stop - Disconnect")
+            this.server.voice.connection.disconnect();
+        }
         this.core.stop()
             .then(
                 /**
                  * @param {String} res
                  */
                 (res) => {
-                    this.alert(res);
+                    this.alert("Stream is stopped.");
+                }
+            ).finally(
+                () => {
                     this.queue.clear();
                 }
             ).catch(
                 /**
-                 * @param {String} rej
+                 * @param {ErrorPlayer} rej
                  */
                 (rej) => {
-                    this.alertError("Error on stop", rej);
+                    this.alertError(rej);
                 }
             );
     }
 
     //endregion
+    //region CHECk
+
+    /**
+     * @return {Boolean} Returns true if connection is alive.
+     */
+    checkConnectionAlive() {
+        if (this.server.voice.connection == null) {
+            this.alertError(
+                new ErrorPlayer(
+                    "error_player_voice_channel_disconnected"
+                )
+            );
+            return false;
+        }
+        return true;
+    }
 }

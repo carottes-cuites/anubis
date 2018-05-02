@@ -1,9 +1,8 @@
 "use strict";
-//import { VoiceConnection } from "discord.js";
 
 let Track = require("./track.js");
 let EventEmitter = require('events');
-let ErrorCore = require('./errors/errorcore.js');
+let ErrorPlayer = require("./errorplayer.js");
 
 module.exports = class Core {
     constructor() {
@@ -19,10 +18,13 @@ module.exports = class Core {
             STREAM_END : "event_core_stream_end"
         };
         this.errors = {
-            ERROR : "global",
-            ERROR_STREAM_ALREADY_STARTED : "stream_already_started",
-            ERROR_TRACK_NO_DATA : "track_no_data",
-            ERROR_TRACK_NO_STREAM_ATTACHED : "track_no_stream_attached"
+            ERROR : "error_core_global",
+            ERROR_STREAM_FAIL_PAUSE : "error_core_stream_fail_pause",
+            ERROR_STREAM_FAIL_RESUME : "error_core_stream_fail_resume",
+            ERROR_STREAM_ALREADY_STARTED : "error_core_stream_already_started",
+            ERROR_STREAM_UNDEFINED : "error_core_stream_undefined",
+            ERROR_TRACK_NO_DATA : "error_core_track_no_data",
+            ERROR_TRACK_NO_STREAM_ATTACHED : "error_core_track_no_stream_attached"
         }
     }
 
@@ -31,15 +33,16 @@ module.exports = class Core {
      * @param {Track} track First item of the queue list.
      * @param {VoiceConnection} connection Voice channel to stream to.
      * @param {Object} options Stream options.
-     * @throws {ErrorCore} Core errors.
+     * @throws {Error} Core errors.
      */
     play(track, connection, options) {
+        console.info("Core - Play");
         return new Promise(
             (resolve, reject) => {
                 if (track == null) {
-                    reject(this.events.ERROR_TRACK_NO_DATA);
+                    reject(new ErrorPlayer(this.events.ERROR_TRACK_NO_DATA));
                 } else if(track.streamSource == null) {
-                    reject(this.events.ERROR_TRACK_NO_STREAM_ATTACHED);
+                    reject(new ErrorPlayer(this.events.ERROR_TRACK_NO_STREAM_ATTACHED));
                 }
                 let dispatcher = connection.playStream(track.streamSource, options);
                 this.defineStreamDispatcherEvents(dispatcher);
@@ -52,7 +55,7 @@ module.exports = class Core {
      * Define stream dispatcher events.
      */
     defineStreamDispatcherEvents(dispatcher) {
-        console.info("Define stream dispatcher");
+        console.info("Core - Define stream dispatcher");
         if (this.streamDispatcher != undefined) {
             this.streamDispatcher = undefined;
         }
@@ -61,7 +64,8 @@ module.exports = class Core {
             this.eventEmitter.emit(this.events.STREAM_START);
         });
         this.streamDispatcher.on("end", () => {
-            this.eventEmitter.emit(this.events.STREAM_END);
+            this.streamDispatcher = undefined;
+            this.eventEmitter.emit(this.events.STREAM_END, "stream_end");
         })
     }
 
@@ -74,7 +78,7 @@ module.exports = class Core {
      * @return {Object} Stream options model.
      */
     createStreamOptions(seek, volume, passes, bitrate) {
-        console.info("Create stream options");
+        console.info("Core - Create stream options");
         return {
             seek: seek,
             volume: volume,
@@ -88,12 +92,19 @@ module.exports = class Core {
      * @return {Promise}
      */
     resume() {
-        console.info("Resume");
+        console.info("Core - Resume");
         return new Promise((res, rej) => {
-            this.streamDispatcher.resume();
-            if (!this.streamDispatcher.paused) res("Stream is resumed.");
-            else rej("Stream failed to resume.");
-
+            if(this.streamDispatcher != undefined) {
+                this.streamDispatcher.resume();
+            } else {
+                rej(new ErrorPlayer(this.errors.ERROR_STREAM_UNDEFINED));
+            }
+            if (!this.streamDispatcher.paused) res();
+            else {
+                rej(
+                    new ErrorPlayer(this.errors.ERROR_STREAM_FAIL_RESUME)
+                );
+            }
         });
     }
 
@@ -102,29 +113,43 @@ module.exports = class Core {
      * @return {Promise}
      */
     pause() {
-        console.info("Pause");
+        console.info("Core - Pause");
         return new Promise((res, rej) => {
-            this.streamDispatcher.pause();
-            if (this.streamDispatcher.paused) res("Stream is paused.");
-            else rej("Stream failed to pause.");
+            if(this.streamDispatcher != undefined) {
+                this.streamDispatcher.pause();
+            } else {
+                rej(new ErrorPlayer(this.errors.ERROR_STREAM_UNDEFINED));
+            }
+            if (this.streamDispatcher.paused) res();
+            else {
+                rej(
+                    new ErrorPlayer(this.errors.ERROR_STREAM_FAIL_PAUSE)
+                );
+            }
         });
     }
 
     /**
      * Stops the stream.
-     * @throws {ErrorCore} Core error.
+     * @throws {ErrorPlayer} Core error.
      */
     stop() {
+        console.info("Core - Stop");
         return new Promise(
             (res, rej) => {
                 try {
-                    console.info("Stop");
+                    if (this.streamDispatcher == undefined) {
+                        throw new ErrorPlayer(this.errors.ERROR_STREAM_UNDEFINED);
+                    }
                     this.streamDispatcher.end();
                     this.streamDispatcher = undefined;
-                    res();
                 } catch (error) {
+                    if(!typeof error == ErrorPlayer) {
+                        error = new ErrorPlayer(this.errors.ERROR);
+                    }
                     rej(error);
                 }
+                res();
                 //this.eventEmitter.emit(this.events.STREAM_STOPPED);
             }
         );
@@ -134,8 +159,9 @@ module.exports = class Core {
      * @return {Boolean}
      */
     isPlaying() {
-        console.log("Is playing");
+        console.log("Core - Is playing ?");
         if (this.streamDispatcher == undefined) {
+            console.log("Stream doesn't exist.");
             return false;
         }
         return !this.streamDispatcher.paused;
