@@ -5,7 +5,7 @@
   "main": "index.js",
   "environment": "dev",
   "scripts": {
-    "build_release": "npm run \"build_prod\" && mv build/app.js release/app.js",
+    "build_release": "rm -rf node_modules && npm install && npm run \"build_prod\" && mv build/app.js release/app.js",
     "build_prod": "NODE_ENV=production webpack --progress --mode production",
     "build_dev": "webpack --mode development",
     "start": "node ./src/index.js",
