@@ -1,7 +1,8 @@
 "use strict";
 
-let Anubis = require('./../bot/anubis.js');
-const Fetcher = require('./../fetchers/fetcher.js');
+let Anubis = require('./../bot/anubis.js'),
+    Fetcher = require('./../fetchers/fetcher.js'),
+    __ = require("i18n").__;
 
 module.exports = class Native extends Fetcher {
     /**
@@ -110,10 +111,32 @@ module.exports = class Native extends Fetcher {
      * @param {*} message 
      */
     help(that, data, message) {
-        var server = that.anubis.smanager.getServer(data.serverID);
-        that.anubis.communicator.message(
-            server.text,
-            'Anubis is an audio-broadcast assistant, which allows you to share audio stream\'s simultaneously with your bitches.\n\n'
+        let server = that.anubis.smanager.getServer(data.serverID);
+        let msg = "Request an action from the bot :\n"
+        + "\t@bot-name {action}\n"
+        + "\nSystem action\n"
+        + "\t{help}\t\tList bot's commands.\n"
+        + "\t{reboot}\t\tReboot the bot.\n"
+        + "\t{update}\t\tUpdate the bot.\n"
+        + "\nStream action :\n"
+        + "\t{queue | q}\t\tList the queue content.\n"
+        + "\t{clean}\t\tClean queue content.\n"
+        + "\t{next}\t\tSkip current track.\n"
+        + "\t{stop}\t\tStop the stream. It will also disconnect the bot from the voice channel and empty its queue.\n"
+        + "\t{pause}\t\tPause the stream.\n"
+        + "\t{resume | play}\t\tResume the stream paused.\n"
+        + "\nRequest a service :\n"
+        + "\t@bot-name [service] (module) *parameter*\t\n"
+        + "\nYoutube service :\n"
+        + "\t[youtube | yt] *video_id*\t\tPlay an audio stream from Youtube.\n"
+        + "\t[youtube | yt] (playlist | pl) *playlist_id*\t\tPlay an audio stream playlist from Youtube.\n"
+        + "\nDeezer service :\n"
+        + "\t[deezer | dzr] *track_name*\t\tPlay a track sample from Deezer.\n"
+        + "\t[deezer | dzr] (artist) *artist_name*\t\tPlay an artist's top track sample from Deezer.\n"
+        + "\t[deezer | dzr] (mix | radio) *mix_genre*\t\tPlay a mix track's sample batch from Deezer.\n"
+        + "\tTwitch service :\n"
+        + "\t[twitch | tw] *stream_name*\t\tPlay a stream from Twitch.";
+        let oldmsg = 'Anubis is an audio-broadcast assistant, which allows you to share audio stream\'s simultaneously with your bitches.\n\n'
             + 'The command structure should look like that one:\n'
             + '"@<bot_name> <service> <arguments> <query>"\n'
             + 'Here is the list of commands you can use with the Anubis :\n\n'
@@ -129,7 +152,11 @@ module.exports = class Native extends Fetcher {
             + 'Twitch <tw / twitch>:\n'
             + '* Add audio-stream to queue: <your_query>\n\n'
             + 'Bonus:\n'
-            + '* Go fuck yourself : origin'
+            + '* Go fuck yourself : origin';
+        console.log(message);
+        that.anubis.communicator.privateMessage(
+            message.author,
+            msg
         );
     }
 }

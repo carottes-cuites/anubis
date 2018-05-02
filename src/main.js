@@ -19,7 +19,8 @@ module.exports = class Main {
 			//locales: ['en'],
 			defaultLocale: 'en',
 			autoReload: true,
-			directory: "./resources/i18n"
+			directory: "./resources/i18n",
+			indent: "\t"
 		});
 	}
 

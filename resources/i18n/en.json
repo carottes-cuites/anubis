@@ -34,5 +34,8 @@
 	"message_player_queue_feeded": "Queue feeded with %s",
 	"message_player_stream_is_paused": "Stream is paused",
 	"message_player_stream_is_resumed": "Stream is resumed",
-	"message_player_stream-is_stopped": "Stream is stopped"
+	"message_player_stream_is_stopped": "Stream is stopped",
+	"message_help": "Bot commands\n\n\tLegend:\t[M] Mandatory\t[O] Optional",
+	"message_help_requests": "\t[M]@bot-name [M]service [O]module [M]parameter\tRequest format.",
+	"message_help_youtube": "\tYoutube service :\n\t\t[youtube | yt] video_id\tPlay a Youtube video\n\t\t[youtube | yt] [playlist | pl] playlist_id\tPlay a youtube playlist."
 }
