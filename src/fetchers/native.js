@@ -2,7 +2,8 @@
 
 let Anubis = require('./../bot/anubis.js'),
     Fetcher = require('./../fetchers/fetcher.js'),
-    __ = require("i18n").__;
+    __ = require("i18n").__,
+    Message = require("discord.js").Message;
 
 module.exports = class Native extends Fetcher {
     /**
@@ -24,20 +25,20 @@ module.exports = class Native extends Fetcher {
     }
     
     /**
-     * 
+     * Resume stream if paused.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     resume(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.resume();//.remote('play');
     }
 
     /**
-     * 
+     * Skip current track.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     next(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.next();
@@ -45,20 +46,20 @@ module.exports = class Native extends Fetcher {
     }
 
     /**
-     * 
+     * Pause current stream.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     pause(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.pause();//remote('pause');
     }
 
     /**
-     * 
+     * Stop current stream.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     stop(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.stop();
@@ -66,10 +67,10 @@ module.exports = class Native extends Fetcher {
     }
 
     /**
-     * 
+     * Get current track.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     current(that, data, message) {
         var server = that.anubis.smanager.getServer(data.serverID);
@@ -81,34 +82,20 @@ module.exports = class Native extends Fetcher {
     }
 
     /**
-     * 
+     * List queue content.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     queue(that, data, message) {
         that.anubis.smanager.getServer(data.serverID).player.inspectQueue();
-        return;
-        var server = that.anubis.smanager.getServer(data.serverID);
-        let msg = "Queue list :";
-        let index = 0;
-        if (server.player.queue.length == 0) {
-            msg = "Queue list is empty.";
-        } else {
-            for (let index = 0; index < server.player.queue.length; index++) {
-                let item = server.player.queue[index];
-                msg += "\n";
-                msg += (index + 1) + " :: " + item.title + (item.artist != "" ? " - " + item.artist : "");
-            }
-        }
-        that.anubis.communicator.message(server.text, msg);
     }
 
     /**
-     * 
+     * List help methods.
      * @param {Native} that 
-     * @param {*} data 
-     * @param {*} message 
+     * @param {Object} data 
+     * @param {Message} message 
      */
     help(that, data, message) {
         let server = that.anubis.smanager.getServer(data.serverID);
@@ -136,24 +123,6 @@ module.exports = class Native extends Fetcher {
         + "\t[deezer | dzr] (mix | radio) *mix_genre*\t\tPlay a mix track's sample batch from Deezer.\n"
         + "\tTwitch service :\n"
         + "\t[twitch | tw] *stream_name*\t\tPlay a stream from Twitch.";
-        let oldmsg = 'Anubis is an audio-broadcast assistant, which allows you to share audio stream\'s simultaneously with your bitches.\n\n'
-            + 'The command structure should look like that one:\n'
-            + '"@<bot_name> <service> <arguments> <query>"\n'
-            + 'Here is the list of commands you can use with the Anubis :\n\n'
-            + 'Player :\n'
-            + '* Resume : play / resume\n'
-            + '* Pause : pause\n'
-            + '* Stop : stop\n'
-            + '* Next : next\n\n'
-            + 'Deezer <dzr / deezer>:\n'
-            + '* Add content to queue : <your_query>'
-            + '* INCOMING : Feed queue with an artist soundtrack : -artist <artist_name>'
-            + '* INCOMING : Feed queue with a genre soundtrack : -mix <genre_name>\n\n'
-            + 'Twitch <tw / twitch>:\n'
-            + '* Add audio-stream to queue: <your_query>\n\n'
-            + 'Bonus:\n'
-            + '* Go fuck yourself : origin';
-        console.log(message);
         that.anubis.communicator.privateMessage(
             message.author,
             msg

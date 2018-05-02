@@ -1,9 +1,9 @@
 "use strict";
 
-let Track = require("./track.js");
-let EventEmitter = require('events');
-let ErrorPlayer = require("./errorplayer.js");
-let __ = require("i18n").__;
+let Track = require("./track.js"),
+    EventEmitter = require('events'),
+    ErrorPlayer = require("./errorplayer.js"),
+    __ = require("i18n").__;
 
 module.exports = class Queue {
     constructor() {

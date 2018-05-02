@@ -1,7 +1,3 @@
-//import { User } from "discord.js";
-
-//import { TextChannel } from "discord.js";
-
 "use strict";
 
 var Essential = require("./../common/essential.js");
@@ -35,6 +31,6 @@ module.exports = class Communicator extends Essential {
      * @param {String} content 
      */
     privateMessage(receiver, content) {
-        receiver.sendMessage(content);
+        receiver.send(content);
     }
 }

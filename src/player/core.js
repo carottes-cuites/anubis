@@ -1,8 +1,8 @@
 "use strict";
 
-let Track = require("./track.js");
-let EventEmitter = require('events');
-let ErrorPlayer = require("./errorplayer.js");
+let Track = require("./track.js"),
+    EventEmitter = require('events'),
+    ErrorPlayer = require("./errorplayer.js");
 
 module.exports = class Core {
     constructor() {

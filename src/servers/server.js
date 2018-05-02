@@ -1,10 +1,7 @@
 "use strict";
 
-//import { VoiceChannel, TextChannel, Client, VoiceConnection } from "discord.js";
-
-let Player = require("./../player/player.js");
-let PlayerReworked = require("./../player/playerReworked.js");
-let Communicator = require("./../dialog/communicator.js");
+let Player = require("./../player/player.js"),
+    Communicator = require("./../dialog/communicator.js");
 
 module.exports = class Server {
     /**
@@ -23,12 +20,11 @@ module.exports = class Server {
     }
 
     init() {
-        this.mPlayer = new PlayerReworked(this);
-        //this.player = new Player(this);
+        this.mPlayer = new Player(this);
     }
 
     /**
-     * @return {PlayerReworked}
+     * @return {Player}
      */
     get player() {
         return this.mPlayer;
