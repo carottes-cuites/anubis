@@ -2,7 +2,8 @@
 
 let i18n = require("i18n"),
 	Anubis = require("./bot/anubis.js"),
-	Configuration = require("./loader/configuration.js");
+	Configuration = require("./loader/configuration.js"),
+	PromiseFinally = require("promise.prototype.finally");
 
 module.exports = class Main {
 
@@ -11,6 +12,7 @@ module.exports = class Main {
 	}
 
 	init() {
+		PromiseFinally.shim();
         let env = process.env.NODE_ENV == undefined ? "development" : process.env.NODE_ENV;
 		console.log('Environment defined : "' + env +'"');
 		this.config = new Configuration();

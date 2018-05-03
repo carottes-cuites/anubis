@@ -33,6 +33,7 @@
     "i18n": "^0.8.3",
     "libsodium-wrappers": "^0.5.4",
     "node-opus": "^0.2.6",
+    "promise.prototype.finally": "^3.1.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "twitch-get-stream": "^0.4.1",
