@@ -5,7 +5,7 @@
   "main": "index.js",
   "environment": "dev",
   "scripts": {
-    "build_release_prepare": "cp -R build/app.js release/app.js && cp -R resources release/resources && cp package.json release/package.json",
+    "build_release_prepare": "cp -R build/app.js release/app.js && cp -R resources release/ && cp package.json release/package.json",
     "prod_build": "NODE_ENV=production webpack --progress --mode production",
     "prod_build_release": "npm run \"prod_build\" && npm run \"build_release_prepare\"",
     "prod_run_release": "npm run \"prod_build_release\" && npm run \"start_release\"",
