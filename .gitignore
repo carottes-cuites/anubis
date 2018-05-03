@@ -1,6 +1,9 @@
-# Custom
+# Build
 build
+
+# Release
 release
+release/*
 
 # Logs
 logs

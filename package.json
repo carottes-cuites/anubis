@@ -5,7 +5,7 @@
   "main": "index.js",
   "environment": "dev",
   "scripts": {
-    "build_release_prepare": "cp -R build/app.js release/app.js",
+    "build_release_prepare": "cp -R build/app.js release/app.js && cp -R resources release/resources && cp package.json release/package.json",
     "prod_build": "NODE_ENV=production webpack --progress --mode production",
     "prod_build_release": "npm run \"prod_build\" && npm run \"build_release_prepare\"",
     "prod_run_release": "npm run \"prod_build_release\" && npm run \"start_release\"",
@@ -15,6 +15,7 @@
     "start": "node ./src/index.js",
     "start_release": "node ./release/app.js",
     "start_build": "node ./build/app.js",
+    "start_app": "echo Refreshing node_modules... && rm -rf node_modules && npm install && echo Launching app... && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch"
   },
