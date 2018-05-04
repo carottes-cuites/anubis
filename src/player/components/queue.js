@@ -1,8 +1,8 @@
 "use strict";
 
-let Track = require("./track.js"),
+let Track = require("./../streamable/track.js"),
     EventEmitter = require('events'),
-    ErrorPlayer = require("./errorplayer.js"),
+    ErrorPlayer = require("./../errors/errorplayer.js"),
     __ = require("i18n").__;
 
 module.exports = class Queue {

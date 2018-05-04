@@ -1,11 +1,11 @@
 "use strict";
 
 let __ = require("i18n").__,
-    Queue = require("./queue.js"),
-    Core = require("./core.js"),
-    Track = require("./track.js"),
+    Queue = require("./components/queue.js"),
+    Core = require("./components/core.js"),
+    Track = require("./streamable/track.js"),
     Server = require("./../servers/server.js"),
-    ErrorPlayer = require("./errorplayer.js");
+    ErrorPlayer = require("./errors/errorplayer.js");
 
 module.exports = class Player {
     //region INITIALIZER
@@ -23,6 +23,7 @@ module.exports = class Player {
      * Initializer.
      */
     init() {
+        this.mAnnouncement = true;
         this.queue = new Queue();
         this.core = new Core();
         this.addEvents();
@@ -147,7 +148,8 @@ module.exports = class Player {
                     connection,
                     this.core.createStreamOptions(
                         0, 1, 3, "auto"
-                    )
+                    ),
+                    this.mAnnouncement
                 );
             }
         ).then(
@@ -297,5 +299,13 @@ module.exports = class Player {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Set announcement status.
+     * @param {Boolean} expectedStatus 
+     */
+    setAnnouncementStatus(expectedStatus) {
+        this.mAnnouncement = expectedStatus;
     }
 }
