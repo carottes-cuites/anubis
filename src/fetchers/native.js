@@ -121,8 +121,8 @@ module.exports = class Native extends Fetcher {
         + "\t[deezer | dzr] *track_name*\t\tPlay a track sample from Deezer.\n"
         + "\t[deezer | dzr] (artist) *artist_name*\t\tPlay an artist's top track sample from Deezer.\n"
         + "\t[deezer | dzr] (mix | radio) *mix_genre*\t\tPlay a mix track's sample batch from Deezer.\n"
-        + "\tTwitch service :\n"
-        + "\t[twitch | tw] *stream_name*\t\tPlay a stream from Twitch.";
+        + "\nTwitch service :\n"
+        + "\t[twitch | tw] *stream_name*\t\tPlay a stream from Twitch.\n";
         that.anubis.communicator.privateMessage(
             message.author,
             msg

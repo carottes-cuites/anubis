@@ -102,9 +102,9 @@ module.exports = class Player {
         content.forEach(
             (track) => {
                 if (index == 0) {
-                    message += "\n" + __("message_player_queue_now_playing", track.formattedName, track.time);
+                    message += "\n" + __("message_player_queue_now_playing", track.formattedName, track.formattedTime);
                 } else {
-                    message += "\n" + __("message_player_queue_track", index, track.formattedName, track.time);
+                    message += "\n" + __("message_player_queue_track", index, track.formattedName, track.formattedTime);
                 }
                 index++;
             }

@@ -127,8 +127,8 @@ module.exports = class FetcherYT extends Fetcher {
      * @param {*} message 
      */
     stream(that, data, message) {
+        console.info("Youtube - Stream");
         var url = that.uri + data.request;
-        console.log("STREAM YOUTUBE");
         try {
             ytdl.getInfo(url, (err, info) => {
                 let stream = ytdl(
@@ -139,18 +139,13 @@ module.exports = class FetcherYT extends Fetcher {
                     }
                 );
                 let player = that.anubis.smanager.getServer(data.serverID).player;
-                //region PLAYER REWORKED
-                let time = parseInt(info.length_seconds);
-                time = Math.floor(time / 3600) + "h" + Math.floor(time / 60) + "m" + (time % 60) + "s"
-                console.log(time);
                 let track = new Track(
                     info.title,
                     "",
                     stream,
-                    time
+                    parseInt(info.length_seconds)
                 );
                 player.feed(track);
-                //endregion
             })
         } catch(error) {
             console.log(error);

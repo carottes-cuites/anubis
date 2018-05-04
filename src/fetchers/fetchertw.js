@@ -1,7 +1,9 @@
 "use strict";
 
-var Fetcher = require('./../fetchers/fetcher.js');
-var Twitch = require('twitch-get-stream');
+let Fetcher = require('./../fetchers/fetcher.js'),
+    Twitch = require('twitch-get-stream'),
+    Track = require('./../player/track.js');
+
 module.exports = class FetcherTW extends Fetcher {
     constructor(anubis) {
         super('twitch', anubis);
@@ -18,6 +20,12 @@ module.exports = class FetcherTW extends Fetcher {
         this.addCommand('STREAM', this.twitch);
     }
     
+    /**
+     * 
+     * @param {FetcherTW} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
     twitch(that, data, message) {
         var channel = data.request.replace(' ', '');
         that.getChannels(that, channel)
@@ -25,15 +33,14 @@ module.exports = class FetcherTW extends Fetcher {
             channel = response.data;
             that.getAudio(channel.name)
                 .then(response => {
-                    var player = that.anubis.smanager.getServer(data.serverID).player;
-                    player.add(
-                        [player.formatToQueue(
-                            'Twitch',
-                            response.url,
-                            'Streamer ' + channel.name
-                        )]
+                    let player = that.anubis.smanager.getServer(data.serverID).player;
+                    let track = new Track(
+                        channel.display_name + " - " + channel.game,
+                        channel.status,
+                        response.url,
+                        0
                     );
-                    player.play();
+                    player.feed(track);
                 })
                 .catch(err => {
                     console.error(err);
