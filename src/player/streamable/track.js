@@ -58,10 +58,11 @@ module.exports = class Track extends StreamItem {
      * @return {String} Formatted time.
      */
     get formattedTime() {
-        var sec_num = time; // don't forget the second param
-        var hours   = Math.floor(sec_num / 3600);
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+        if (this.mTime == 0) return "LIVE";
+        let sec_num = this.mTime; // don't forget the second param
+        let hours   = Math.floor(sec_num / 3600);
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        let seconds = sec_num - (hours * 3600) - (minutes * 60);
 
         if (hours   < 10) {hours   = "0"+hours;}
         if (minutes < 10) {minutes = "0"+minutes;}
