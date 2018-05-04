@@ -61,6 +61,7 @@ module.exports = class Core {
                             dispatcherAnnounce.on("end", () => {
                                 this.stream(connection, track, options);
                                 dispatcherAnnounce = undefined;
+                                resolve(track);
                             });
                         }
                     ).catch(
