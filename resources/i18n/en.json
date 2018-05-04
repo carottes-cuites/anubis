@@ -34,5 +34,7 @@
 	"message_player_queue_feeded": "Queue feeded with %s",
 	"message_player_stream_is_paused": "Stream is paused",
 	"message_player_stream_is_resumed": "Stream is resumed",
-	"message_player_stream_is_stopped": "Stream is stopped"
+	"message_player_stream_is_stopped": "Stream is stopped",
+	"message_mute": "You lucky Asimov's bastard heir. I'm gonna shut my mouth for now...",
+	"message_unmute": "Thanks for giving me back my free speech."
 }

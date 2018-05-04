@@ -36,9 +36,10 @@ module.exports = class Core {
      * @param {Track} track First item of the queue list.
      * @param {VoiceConnection} connection Voice channel to stream to.
      * @param {Object} options Stream options.
+     * @param {Boolean} announceTrackName True if name should be announced vocally before playing.
      * @throws {Error} Core errors.
      */
-    play(track, connection, options) {
+    play(track, connection, options, announceTrackName) {
         console.info("Core - Play");
         return new Promise(
             (resolve, reject) => {
@@ -47,32 +48,47 @@ module.exports = class Core {
                 } else if(track.streamSource == null) {
                     reject(new ErrorPlayer(this.events.ERROR_TRACK_NO_STREAM_ATTACHED));
                 }
-                this.tts.fetchAnnounceFromText(
-                    "Now playing: " + track.formattedName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,', '),
-                    this.tts.languages.en
-                ).then(
-                    /**
-                     * @param {Announce} res
-                     */
-                    (res) => {
-                        let dispatcherAnnounce = connection.playStream(res.streamUrl, options);
-                        dispatcherAnnounce.on("end", () => {
-                            let dispatcherTrack = connection.playStream(track.streamSource, options);
-                            this.defineStreamDispatcherEvents(dispatcherTrack);
-                            resolve(track);
-                            dispatcherAnnounce = undefined;
-                        });
-                    }
-                ).catch(
-                    /**
-                     * @param {Error} rej
-                     */
-                    (rej) => {
-                        console.error(err);
-                    }
-                );
+                if (announceTrackName) {
+                    this.tts.fetchAnnounceFromText(
+                        "Now playing: " + track.formattedName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,', '),
+                        this.tts.languages.en
+                    ).then(
+                        /**
+                         * @param {Announce} res
+                         */
+                        (res) => {
+                            let dispatcherAnnounce = connection.playStream(res.streamUrl, options);
+                            dispatcherAnnounce.on("end", () => {
+                                this.stream(connection, track, options);
+                                dispatcherAnnounce = undefined;
+                            });
+                        }
+                    ).catch(
+                        /**
+                         * @param {Error} rej
+                         */
+                        (rej) => {
+                            console.error(err);
+                        }
+                    );
+                } else {
+                    this.stream(connection, track, options);
+                    resolve(track);
+                }
+                
             }
         );
+    }
+
+    /**
+     * Stream content.
+     * @param {VoiceConnection} connection 
+     * @param {Track} track 
+     * @param {Object} options 
+     */
+    stream(connection, track, options) {
+        let dispatcherTrack = connection.playStream(track.streamSource, options);
+        this.defineStreamDispatcherEvents(dispatcherTrack);
     }
 
     /**

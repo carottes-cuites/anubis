@@ -23,6 +23,7 @@ module.exports = class Player {
      * Initializer.
      */
     init() {
+        this.mAnnouncement = true;
         this.queue = new Queue();
         this.core = new Core();
         this.addEvents();
@@ -147,7 +148,8 @@ module.exports = class Player {
                     connection,
                     this.core.createStreamOptions(
                         0, 1, 3, "auto"
-                    )
+                    ),
+                    this.mAnnouncement
                 );
             }
         ).then(
@@ -297,5 +299,13 @@ module.exports = class Player {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Set announcement status.
+     * @param {Boolean} expectedStatus 
+     */
+    setAnnouncementStatus(expectedStatus) {
+        this.mAnnouncement = expectedStatus;
     }
 }

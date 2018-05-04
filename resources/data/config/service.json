@@ -40,6 +40,14 @@
 				"queue": {
 					"method": "QUEUE",
 					"pattern": ["queue", "q"]
+				},
+				"silent": {
+					"method": "MUTE",
+					"pattern": ["mute", "silence", "silent", "m"]
+				},
+				"noisy": {
+					"method": "UNMUTE",
+					"pattern": ["unmute", "noisy", "n"]
 				}
 			}
 		},
@@ -69,7 +77,10 @@
 		},
 		"twitch": {
 			"name": "Twitch",
-			"keywords": ["twitch", "tw"],
+			"keywords": [
+				"twitch",
+				"tw"
+			],
 			"cmds": {
 				"stream": {
 					"method": "STREAM",
@@ -94,7 +105,8 @@
 		"spotify": {
 			"name": "Spotify",
 			"keywords": [
-				"spotify"
+				"spotify",
+				"sp"
 			],
 			"cmds": {
 				"stream": {
@@ -116,7 +128,7 @@
 				},
 				"playlist": {
 					"method": "PLAY_PLAYLIST",
-					"pattern": ["playlist"]
+					"pattern": ["playlist", "pl"]
 				}
 			}
 		}

@@ -6,15 +6,18 @@ let Anubis = require('./../bot/anubis.js'),
     Message = require("discord.js").Message;
 
 module.exports = class Native extends Fetcher {
+    //region INITIALIZER
+
     /**
-     * 
-     * @param {Anubis} anubis 
+     * Constructor
+     * @param {Anubis} anubis Bot.
      */
     constructor(anubis) {
         super('native', anubis);
     }
 
     prepare() {
+        this.addCommand('REBOOT', this.reboot);
         this.addCommand('PLAY', this.resume);
         this.addCommand('PAUSE', this.pause);
         this.addCommand('NEXT', this.next);
@@ -22,7 +25,12 @@ module.exports = class Native extends Fetcher {
         this.addCommand('HELP', this.help);
         this.addCommand('CURRENT', this.current);
         this.addCommand('QUEUE', this.queue);
+        this.addCommand('MUTE', this.mute);
+        this.addCommand('UNMUTE', this.unmute);
     }
+
+    //endregion
+    //region CONTROLS
     
     /**
      * Resume stream if paused.
@@ -66,6 +74,9 @@ module.exports = class Native extends Fetcher {
         //that.anubis.smanager.getServer(data.serverID).player.remote('stop');
     }
 
+    //endregion
+    //region QUEUE
+
     /**
      * Get current track.
      * @param {Native} that 
@@ -91,6 +102,23 @@ module.exports = class Native extends Fetcher {
         that.anubis.smanager.getServer(data.serverID).player.inspectQueue();
     }
 
+    //endregion
+    //region SYSTEM
+
+    /**
+     * Reboot the bot session.
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
+    reboot(that, data, message) {
+        let server = that.anubis.smanager.getServer(data.serverID);
+        that.anubis.communicator.message(
+            server.text,
+            "This feature is still in a \"Work in progress\" state."
+        );
+    }
+
     /**
      * List help methods.
      * @param {Native} that 
@@ -105,6 +133,9 @@ module.exports = class Native extends Fetcher {
         + "\t{help}\t\tList bot's commands.\n"
         + "\t{reboot}\t\tReboot the bot.\n"
         + "\t{update}\t\tUpdate the bot.\n"
+        + "\nVoice action :\n"
+        + "\t{mute | silent | silence | m} Silence the bot track announcements on stream.\n"
+        + "\t{unmute | noisy | n} The bot makes announcements on stream track.\n"
         + "\nStream action :\n"
         + "\t{queue | q}\t\tList the queue content.\n"
         + "\t{clean}\t\tClean queue content.\n"
@@ -128,4 +159,39 @@ module.exports = class Native extends Fetcher {
             msg
         );
     }
+
+    //endregion
+    //region VOICE
+
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
+    mute(that, data, message) {
+        let server = that.anubis.smanager.getServer(data.serverID);
+        server.player.setAnnouncementStatus(false);
+        that.anubis.communicator.message(
+            server.text,
+            __("message_mute")
+        );
+    }
+
+    /**
+     * 
+     * @param {Native} that 
+     * @param {*} data 
+     * @param {*} message 
+     */
+    unmute(that, data, message) {
+        let server = that.anubis.smanager.getServer(data.serverID);
+        server.player.setAnnouncementStatus(true);
+        that.anubis.communicator.message(
+            server.text,
+            __("message_unmute")
+        );
+    }
+
+    //endregion
 }
