@@ -25,6 +25,18 @@ module.exports = class Communicator extends Essential {
         }).catch(console.error);
     }
 
+    messageSystem(channel, content, focuses) {
+        return new Promise(
+            (res, rej) => {
+                content = "SYSTEM MESSAGE - " + content;
+                channel.send(content).then(elem => {
+                    console.log('Message sent : "' + content + '"');
+                    res();
+                }).catch(console.error);
+            }
+        );
+    }
+
     /**
      * Send a private message
      * @param {User} receiver 

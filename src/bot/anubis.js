@@ -1,11 +1,11 @@
 "use strict";
 
-var Discord = require("discord.js");
-const Interpreter = require("./../dialog/interpreter.js");
-var FetcherManager = require("./../fetchers/fetchermanager.js");
-var Communicator = require("./../dialog/communicator.js");
-var Sentinel = require("./../bot/sentinel.js");
-var ServerManager = require("./../servers/servermanager.js");
+let Discord = require("discord.js"),
+    Interpreter = require("./../dialog/interpreter.js"),
+    FetcherManager = require("./../fetchers/fetchermanager.js"),
+    Communicator = require("./../dialog/communicator.js"),
+    Sentinel = require("./../bot/sentinel.js"),
+    ServerManager = require("./../servers/servermanager.js");
 
 module.exports = class Anubis {
     /**
@@ -18,6 +18,7 @@ module.exports = class Anubis {
     }
 
     init() {
+        console.info("Anubis - Initializing components...");
         this.bot = new Discord.Client();
         this.sentinel = new Sentinel(this);
         this.interpreter = new Interpreter(this);
@@ -38,6 +39,7 @@ module.exports = class Anubis {
     //endregion
 
     prepare() {
+        console.info("Anubis - Preparing components...");
         this.fetcherManager.prepare();
         this.interpreter.prepare();
         this.communicator.prepare();
@@ -45,6 +47,7 @@ module.exports = class Anubis {
     }
     
     ready() {
+        console.info("Anubis - Readying components...");
         this.interpreter.ready();
         this.fetcherManager.ready();
         this.communicator.ready();
@@ -52,6 +55,7 @@ module.exports = class Anubis {
     }
     
     run() {
+        console.info("Anubis - Running components...");
         this.interpreter.run();
         this.fetcherManager.run();
         this.communicator.run();
@@ -59,10 +63,31 @@ module.exports = class Anubis {
     }
 
     connect() {
-        console.log('Trying to communicate with "Discord" server...');
+        console.log('Anubis - Connecting to "Discord" server...');
         let env = process.env.NODE_ENV == undefined ? "development" : process.env.NODE_ENV;
 		this.bot.login(this.config.discord[env].token);
     }
 
     disconnect() {}
+
+    destroy() {
+        console.info("Anubis - Destroying components...");
+        delete this.mSmanager;
+        delete this.sentinel;
+        delete this.interpreter;
+        delete this.fetcherManager;
+        delete this.communicator;
+        this.bot.destroy();
+        delete this.bot;
+    }
+
+    reboot() {
+        console.info("Anubis - Rebooting...");
+        this.destroy();
+        this.init();
+        this.prepare();
+        this.ready();
+        this.connect();
+        console.info("Anubis - Reboot complete.");
+    }
 }

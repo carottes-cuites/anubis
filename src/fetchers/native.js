@@ -113,10 +113,12 @@ module.exports = class Native extends Fetcher {
      */
     reboot(that, data, message) {
         let server = that.anubis.smanager.getServer(data.serverID);
-        that.anubis.communicator.message(
+        that.anubis.communicator.messageSystem(
             server.text,
-            "This feature is still in a \"Work in progress\" state."
-        );
+            "Reboot initiated (it can take few seconds before being alive again)."
+        ).then(() => {
+            that.anubis.reboot();
+        });
     }
 
     /**

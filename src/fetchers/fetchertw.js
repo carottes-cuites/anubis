@@ -2,7 +2,7 @@
 
 let Fetcher = require('./../fetchers/fetcher.js'),
     Twitch = require('twitch-get-stream'),
-    Track = require('./../player/track.js');
+    Track = require('./../player/streamable/track.js');
 
 module.exports = class FetcherTW extends Fetcher {
     constructor(anubis) {
@@ -16,8 +16,8 @@ module.exports = class FetcherTW extends Fetcher {
     }
 
     prepare() {
-        Twitch = Twitch(this.anubis.config.twitch.client);
-        this.addCommand('STREAM', this.twitch);
+        this.twitch = Twitch(this.anubis.config.twitch.client);
+        this.addCommand('STREAM', this.stream);
     }
     
     /**
@@ -26,8 +26,8 @@ module.exports = class FetcherTW extends Fetcher {
      * @param {*} data 
      * @param {*} message 
      */
-    twitch(that, data, message) {
-        var channel = data.request.replace(' ', '');
+    stream(that, data, message) {
+        let channel = data.request.replace(' ', '');
         that.getChannels(that, channel)
         .then(response => {
             channel = response.data;
@@ -35,8 +35,8 @@ module.exports = class FetcherTW extends Fetcher {
                 .then(response => {
                     let player = that.anubis.smanager.getServer(data.serverID).player;
                     let track = new Track(
-                        channel.display_name + " - " + channel.game,
-                        channel.status,
+                        channel.display_name,
+                        channel.game,
                         response.url,
                         0
                     );
@@ -44,7 +44,7 @@ module.exports = class FetcherTW extends Fetcher {
                 })
                 .catch(err => {
                     console.error(err);
-                    var server = that.anubis.smanager.getServer(data.serverID);
+                    let server = that.anubis.smanager.getServer(data.serverID);
                     switch(err.code) {
                         case 404:
                             that.anubis.communicator.message(
@@ -72,9 +72,9 @@ module.exports = class FetcherTW extends Fetcher {
                 };
                 var success = () => resolve(results);
                 var fail = () => reject(results);
-                Twitch.get(channel).then(function(streams) {
+                this.twitch.get(channel).then(function(streams) {
                     streams.forEach(stream => {
-                        if (stream.quality.indexOf('Audio') != -1) url = stream.url;
+                        if (stream.quality.match(/audio/i)) url = stream.url;
                     });
                     if(url != undefined) {
                         results = {
