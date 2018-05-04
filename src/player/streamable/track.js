@@ -1,6 +1,8 @@
 "use strict";
 
-module.exports = class Track {
+let StreamItem = require("./streamItem.js");
+
+module.exports = class Track extends StreamItem {
     /**
      * 
      * @param {String} title 
@@ -9,18 +11,11 @@ module.exports = class Track {
      * @param {String} time
      */
     constructor(title, artist, streamSource, time) {
-        this.mId = "track-" + new Date().getTime();
+        super("track");
         this.mTitle = title;
         this.mArtist = artist;
         this.mStreamSource = streamSource;
         this.mTime = time;
-    }
-
-    /**
-     * @return {String} Id
-     */
-    get id() {
-        return this.mId;
     }
 
     /**

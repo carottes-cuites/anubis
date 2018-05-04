@@ -1,8 +1,10 @@
 "use strict";
 
-let Track = require("./track.js"),
+let Track = require("./../streamable/track.js"),
+    Announce = require("./../streamable/annouce.js"),
     EventEmitter = require('events'),
-    ErrorPlayer = require("./errorplayer.js");
+    ErrorPlayer = require("./../errors/errorplayer.js"),
+    TextToSpeech = require("./tts.js");
 
 module.exports = class Core {
     constructor() {
@@ -12,6 +14,7 @@ module.exports = class Core {
     init() {
         this.streamDispatcher = undefined;
         this.eventEmitter = new EventEmitter();
+        this.tts = new TextToSpeech();
         this.events = {
             STREAM_START : "event_core_stream_start",
             STREAM_STOPPED : "event_core_stream_stopped",
@@ -44,9 +47,30 @@ module.exports = class Core {
                 } else if(track.streamSource == null) {
                     reject(new ErrorPlayer(this.events.ERROR_TRACK_NO_STREAM_ATTACHED));
                 }
-                let dispatcher = connection.playStream(track.streamSource, options);
-                this.defineStreamDispatcherEvents(dispatcher);
-                resolve(track);
+                this.tts.fetchAnnounceFromText(
+                    "Now playing: " + track.formattedName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,', '),
+                    this.tts.languages.en
+                ).then(
+                    /**
+                     * @param {Announce} res
+                     */
+                    (res) => {
+                        let dispatcherAnnounce = connection.playStream(res.streamUrl, options);
+                        dispatcherAnnounce.on("end", () => {
+                            let dispatcherTrack = connection.playStream(track.streamSource, options);
+                            this.defineStreamDispatcherEvents(dispatcherTrack);
+                            resolve(track);
+                            dispatcherAnnounce = undefined;
+                        });
+                    }
+                ).catch(
+                    /**
+                     * @param {Error} rej
+                     */
+                    (rej) => {
+                        console.error(err);
+                    }
+                );
             }
         );
     }

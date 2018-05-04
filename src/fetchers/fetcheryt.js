@@ -5,7 +5,7 @@ const google = require("googleapis");
 const youtube = google.google.youtube('v3');
 const Fetcher = require('./../fetchers/fetcher.js');
 const Anubis = require('./../bot/anubis.js');
-let Track = require('./../player/track.js');
+let Track = require('./../player/streamable/track.js');
 
 module.exports = class FetcherYT extends Fetcher {
     /**

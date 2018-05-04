@@ -34,6 +34,7 @@
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
+    "google-tts-api": "0.0.2",
     "googleapis": "^28.1.0",
     "i18n": "^0.8.3",
     "libsodium-wrappers": "^0.5.4",

@@ -1,11 +1,11 @@
 "use strict";
 
 let __ = require("i18n").__,
-    Queue = require("./queue.js"),
-    Core = require("./core.js"),
-    Track = require("./track.js"),
+    Queue = require("./components/queue.js"),
+    Core = require("./components/core.js"),
+    Track = require("./streamable/track.js"),
     Server = require("./../servers/server.js"),
-    ErrorPlayer = require("./errorplayer.js");
+    ErrorPlayer = require("./errors/errorplayer.js");
 
 module.exports = class Player {
     //region INITIALIZER
