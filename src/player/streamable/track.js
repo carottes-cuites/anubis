@@ -11,7 +11,7 @@ module.exports = class Track extends StreamItem {
      * @param {Int} time
      */
     constructor(title, artist, streamSource, time) {
-        super("track");
+        super(title);
         this.mTitle = title;
         this.mArtist = artist;
         this.mStreamSource = streamSource;
