@@ -19,7 +19,7 @@
         "start_build": "node ./build/app.js",
         "start_app": "echo Launching app... && node app.js",
         "start_app_refresh": "echo Refreshing node_modules... && rm -rf node_modules && npm install && echo Launching app... && node app.js",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "cucumber-js",
         "watch": "webpack --watch"
     },
     "keywords": [
@@ -49,6 +49,7 @@
         "ytdl-core": "^0.20.2"
     },
     "devDependencies": {
+        "cucumber": "^4.2.1",
         "json-loader": "^0.5.7",
         "nodemon": "^1.17.3",
         "raw-loader": "^0.5.1",
